@@ -21,13 +21,13 @@ public class User {
     private String mobile;
 
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
+//    public void setId(int id) {
+//        this.id = id;
+//    }
+// Uncomment if necessary
+//    public int getId() {
+//        return id;
+//    }
 }
 
 
