@@ -1,15 +1,19 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "REGISTERED_USERS")
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue
@@ -20,14 +24,6 @@ public class User {
     private String email;
     private String mobile;
 
-
-//    public void setId(int id) {
-//        this.id = id;
-//    }
-// Uncomment if necessary
-//    public int getId() {
-//        return id;
-//    }
 }
 
 
