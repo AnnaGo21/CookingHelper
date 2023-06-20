@@ -1,13 +1,12 @@
 package com.example.demo.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -16,13 +15,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Recipe {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int recipeID;
     private String recipeName;
-    private String instructions;
     private int cookingTime;
     private String difficulty;
     private String cuisine;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipeID")
+    private List<IngredientsRecipes> ingredientsRecipesList;
+
+    @ManyToMany
+    private List<Food> foodList;
+
+    @ElementCollection
+    private List<String> steps;
+
+    private boolean isPublic;
+
+    @ManyToOne
+    private User createdBy;
+
 }
 
 

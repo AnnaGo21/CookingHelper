@@ -1,10 +1,10 @@
 package com.example.demo.service;
 
 //import com.example.demo.entity.User;
-//import com.example.demo.repository.UserRepo;
+//import com.example.demo.repository.UserRepository;
 //import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepo;
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,19 +12,19 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
 
-    private UserRepo userRepo;
+    private UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepo userRepo){
-        this.userRepo = userRepo;
+    public UserService(UserRepository userRepository){
+        this.userRepository = userRepository;
     }
 
     public User saveDetails(User user){
-        return userRepo.save(user);
+        return userRepository.save(user);
     }
 
     public User getUserByEmail(String email){
-        return userRepo.getUserByEmail(email);
+        return userRepository.getUserByEmail(email);
     }
 }
 

@@ -1,10 +1,7 @@
 package com.example.demo.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "INGREDIENTS")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Ingredients {
+public class Ingredient {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ingredientID;
     private String ingredientName;
     private String ingredientDescription;
