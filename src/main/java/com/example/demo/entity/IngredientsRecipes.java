@@ -14,7 +14,7 @@ public class IngredientsRecipes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int recipeID;
 
-    @ManyToOne
+    @ManyToOne // Many ingredients -> one recipe
     private Ingredient ingredient;
 
     private double quantity;

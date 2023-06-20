@@ -22,7 +22,7 @@ public class Recipe {
     private String difficulty;
     private String cuisine;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipeID")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipeID") // One recipe -> many ingredients
     private List<IngredientsRecipes> ingredientsRecipesList;
 
     @ManyToMany
@@ -30,6 +30,12 @@ public class Recipe {
 
     @ElementCollection
     private List<String> steps;
+    /*
+    * JPA treats it as a separate table in the database.
+    * The steps table will have a foreign key to the Recipe table to establish the relationship.
+    * Each element in the steps collection will be stored as a separate row in the steps table,
+    with a reference to the corresponding Recipe entity.
+     */
 
     private boolean isPublic;
 
