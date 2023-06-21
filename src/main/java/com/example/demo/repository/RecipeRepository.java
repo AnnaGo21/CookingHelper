@@ -9,6 +9,8 @@ import java.util.List;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
+
+    Recipe findById(int id);
     List<Recipe> findByUser(User user);
 
     List<Recipe> findByPublicity(); // Public receipts and private receipts
@@ -22,5 +24,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     List<Recipe> findByCalories(double minCalories);
 
     List<Recipe> findByCarbohydrates(double minCarbohydrates);
+
+    Recipe getRecipeByIngredientId(int id);
 }
 
