@@ -1,4 +1,4 @@
-CREATE TABLE Recipes (
+CREATE TABLE RECIPE (
      RecipeID INT PRIMARY KEY,
      RecipeName VARCHAR(100) NOT NULL,
      CookingTime INT,

@@ -58,4 +58,8 @@ public class FoodService {
     public List<Recipe> searchFoodsByCarbohydrates(double minCarbohydrates){
         return foodRepository.findByCarbohydrates(minCarbohydrates);
     }
+
+    public Recipe getFoodByIngredientId(int id) {
+        return foodRepository.getFoodByIngredientId(id);
+    }
 }

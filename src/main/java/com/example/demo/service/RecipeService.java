@@ -5,6 +5,7 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.RecipeRepository;
 import com.example.demo.repository.UserRepository;
 import exceptions.UnauthorizedAccessException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +14,10 @@ import java.util.List;
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
-    private final UserRepository userRepository;
 
-    public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository) {
+    @Autowired
+    public RecipeService(RecipeRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
-        this.userRepository = userRepository;
     }
 
     public Recipe createRecipe(User user, Recipe recipe) {
@@ -25,14 +25,17 @@ public class RecipeService {
         return recipeRepository.save(recipe);
     }
 
-    public void deleteRecipe(User user, int recipeID) throws ChangeSetPersister.NotFoundException, UnauthorizedAccessException {
-        Recipe recipe = recipeRepository.findById(recipeID)
-                .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+    public void deleteRecipe(User user, int recipeID) throws UnauthorizedAccessException {
+        Recipe recipe = recipeRepository.findById(recipeID);
         if (recipe.getCreatedBy().equals(user)) {
             recipeRepository.delete(recipe);
         } else {
             throw new UnauthorizedAccessException("You are not authorized to delete this recipe. Only Admin or Creator can.");
         }
+    }
+
+    public Recipe getRecipeById(int id){
+        return recipeRepository.findById(id);
     }
 
     public List<Recipe> getRecipesByUser(User user) {
@@ -61,5 +64,9 @@ public class RecipeService {
 
     public List<Recipe> searchRecipesByCarbohydrates(double minCarbohydrates){
         return recipeRepository.findByCarbohydrates(minCarbohydrates);
+    }
+
+    public Recipe getRecipeByIngredientId(int id) {
+        return recipeRepository.getRecipeByIngredientId(id);
     }
 }
