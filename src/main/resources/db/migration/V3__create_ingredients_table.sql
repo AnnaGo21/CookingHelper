@@ -1,4 +1,4 @@
-CREATE TABLE Ingredients (
+CREATE TABLE INGREDIENTS (
      IngredientID INT PRIMARY KEY,
      IngredientName VARCHAR(50) NOT NULL,
      IngredientDescription VARCHAR(255),
