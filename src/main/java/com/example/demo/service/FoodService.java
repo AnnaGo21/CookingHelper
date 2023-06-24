@@ -59,7 +59,7 @@ public class FoodService {
         return foodRepository.findByCarbohydrates(minCarbohydrates);
     }
 
-    public Recipe getFoodByIngredientId(int id) {
+    public Food getFoodByIngredientId(int id) {
         return foodRepository.getFoodByIngredientId(id);
     }
 }

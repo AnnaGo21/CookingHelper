@@ -19,6 +19,6 @@ public interface FoodRepository extends JpaRepository<Food, Integer> {
 
     List<Recipe> findByCarbohydrates(double minCarbohydrates);
 
-    Recipe getFoodByIngredientId(int id);
+    Food getFoodByIngredientId(int id);
 }
 

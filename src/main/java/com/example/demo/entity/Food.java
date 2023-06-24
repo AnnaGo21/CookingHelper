@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "FOOD")
@@ -26,6 +28,9 @@ public class Food {
     private double fat;
     private double carbohydrates;
     private double protein;
+
+    @OneToMany // One food (pizza) has many kind of recipes
+    List<Recipe> recipeList;
 
     public double getCalories() {
         return calories;
