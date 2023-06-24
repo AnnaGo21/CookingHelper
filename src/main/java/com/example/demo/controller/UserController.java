@@ -15,6 +15,7 @@ public class UserController {
     public UserController(UserService userService){
         this.userService = userService;
     }
+
 //    @PostMapping("/addUser")
 //    public User postDetails(User user){
 //        return userService.saveDetails(user);
