@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Food;
-import com.example.demo.entity.Recipe;
 import com.example.demo.repository.FoodRepository;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
@@ -40,26 +39,26 @@ public class FoodService {
     }
 
     public List<Food> searchFoodsByName(String name) {
-        return foodRepository.findByName(name);
+        return foodRepository.findByFoodName(name);
     }
 
     public List<Food> searchFoodsByProtein(double minProtein) {
-        return foodRepository.findByProteins(minProtein);
+        return foodRepository.findByProteinsGreaterThanEqual(minProtein);
     }
 
     public List<Food> searchFoodsByFat(double maxFat) {
-        return foodRepository.findByFats(maxFat);
+        return foodRepository.findByFatLessThanEqual(maxFat);
     }
 
-    public List<Recipe> searchFoodsByCalories(double minCalories) {
-        return foodRepository.findByCalories(minCalories);
+    public List<Food> searchFoodsByCalories(double minCalories) {
+        return foodRepository.findByCaloriesGreaterThanEqual(minCalories);
     }
 
-    public List<Recipe> searchFoodsByCarbohydrates(double minCarbohydrates){
-        return foodRepository.findByCarbohydrates(minCarbohydrates);
+    public List<Food> searchFoodsByCarbohydrates(double minCarbohydrates){
+        return foodRepository.findByCarbohydratesGreaterThanEqual(minCarbohydrates);
     }
 
-    public Food getFoodByIngredientId(int id) {
-        return foodRepository.getFoodByIngredientId(id);
+    Food getFoodByIngredientId(int ingredientId) {
+        return foodRepository.findByIngredientsRecipesListIngredientIngredientID(ingredientId);
     }
 }

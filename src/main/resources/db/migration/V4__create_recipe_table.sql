@@ -1,9 +1,10 @@
 CREATE TABLE RECIPE (
-     RecipeID INT PRIMARY KEY,
-     RecipeName VARCHAR(100) NOT NULL,
-     CookingTime INT,
-     Servings INT,
-     Difficulty VARCHAR(50),
-     Cuisine VARCHAR(50),
-     IsPublic BIT(1) NOT NULL
+    recipeId INT PRIMARY KEY AUTO_INCREMENT,
+    recipeName VARCHAR(255),
+    cookingTime INT,
+    difficulty VARCHAR(255),
+    cuisine VARCHAR(255),
+    isPublic BOOLEAN,
+    created_by INT,
+    FOREIGN KEY (created_by) REFERENCES REGISTERED_USERS(id)
 );

@@ -10,21 +10,14 @@ import java.util.List;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
-    Recipe findById(int id);
-    List<Recipe> findByUser(User user);
+    Recipe findByRecipeId(int recipeId);
+    List<Recipe> findByCreatedBy(User user);
+    List<Recipe> findByIsPublic(boolean isPublic);
+    List<Recipe> findByIngredientsRecipesListIngredientIngredientName(String ingredientName);
+    List<Recipe> findByIngredientsRecipesListIngredientProteinsGreaterThanEqual(double minProtein);
+    List<Recipe> findByIngredientsRecipesListIngredientFatLessThanEqual(double maxFat);
+    List<Recipe> findByIngredientsRecipesListIngredientCaloriesGreaterThanEqual(double minCalories);
+    List<Recipe> findByIngredientsRecipesListIngredientCarbohydratesGreaterThanEqual(double minCalories);
 
-    List<Recipe> findByPublicity(); // Public receipts and private receipts
-
-    List<Recipe> findByIngredients(String ingredientName);
-
-    List<Recipe> findByProtein(double minProtein);
-
-    List<Recipe> findByFats(double maxFat);
-
-    List<Recipe> findByCalories(double minCalories);
-
-    List<Recipe> findByCarbohydrates(double minCarbohydrates);
-
-    Recipe getRecipeByIngredientId(int id);
+    //List<Recipe> findByIngredientsRecipesListRecipe(int id);
 }
-

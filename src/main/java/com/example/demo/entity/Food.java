@@ -18,19 +18,23 @@ public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int foodID;
-    private String foodName;
-    private int recipeID;
 
+    private String foodName;
     private String description;
     private String type;
     private String measurementUnit;
     private double calories;
     private double fat;
     private double carbohydrates;
-    private double protein;
+    private double proteins;
 
-    @OneToMany // One food (pizza) has many kind of recipes
-    List<Recipe> recipeList;
+
+    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL) // One food -> many ingredients
+    private List<IngredientsRecipes> ingredientsRecipesList;
+
+//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL) // One food (pizza) has many kind of recipes
+//    private List<Recipe> recipeList;
+
 
     public double getCalories() {
         return calories;
@@ -57,11 +61,11 @@ public class Food {
     }
 
     public double getProtein() {
-        return protein;
+        return proteins;
     }
 
     public void setProtein(double protein) {
-        this.protein = protein;
+        this.proteins = protein;
     }
 }
 

@@ -1,7 +1,9 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Food;
+import com.example.demo.entity.Ingredient;
 import com.example.demo.entity.Recipe;
+import jakarta.persistence.Table;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,16 +11,18 @@ import java.util.List;
 
 @Repository
 public interface FoodRepository extends JpaRepository<Food, Integer> {
-    List<Food> findByName(String name);
+    List<Food> findByFoodName(String foodName);
 
-    List<Food> findByProteins(double minProtein);
+    List<Food> findByType(String type);
 
-    List<Food> findByFats(double maxFat);
+    List<Food> findByCaloriesGreaterThanEqual(double minCalories);
 
-    List<Recipe> findByCalories(double minCalories);
+    List<Food> findByFatLessThanEqual(double maxFat);
 
-    List<Recipe> findByCarbohydrates(double minCarbohydrates);
+    List<Food> findByCarbohydratesGreaterThanEqual(double minCarbohydrates);
 
-    Food getFoodByIngredientId(int id);
+    List<Food> findByProteinsGreaterThanEqual(double minProteins);
+
+    Food findByIngredientsRecipesListIngredientIngredientID(int ingredientID);
 }
 
