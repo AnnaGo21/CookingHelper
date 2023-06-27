@@ -58,7 +58,11 @@ public class FoodService {
         return foodRepository.findByCarbohydratesGreaterThanEqual(minCarbohydrates);
     }
 
-    Food getFoodByIngredientId(int ingredientId) {
+    public Food getFoodByIngredientId(int ingredientId) {
         return foodRepository.findByIngredientsRecipesListIngredientIngredientID(ingredientId);
+    }
+
+    public Food getFoodByRecipeId(int recipeId){
+        return foodRepository.findByIngredientsRecipesListRecipeRecipeId(recipeId);
     }
 }
