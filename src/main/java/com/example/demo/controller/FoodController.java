@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/food")
 public class FoodController {
@@ -16,6 +18,11 @@ public class FoodController {
     @Autowired
     public FoodController(FoodService foodService) {
         this.foodService = foodService;
+    }
+
+    @GetMapping("/all")
+    public List<Food> getAllFood(){
+        return foodService.getAllFoods();
     }
 
     @GetMapping("/Iid")
