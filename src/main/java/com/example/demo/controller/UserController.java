@@ -1,12 +1,19 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.UserDto;
+import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/login")
+@Validated
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -16,31 +23,20 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public User getUserById(@PathVariable int id){
         return userService.getUserById(id);
     }
 
-    @PutMapping("/user")
+    @PutMapping
     public User postDetails(@RequestBody User user){
         return userService.saveDetails(user);
     }
 
-
-//    @GetMapping("/user")
-//    public User getUserById(@RequestParam int id){
-//        return userService.getUserById(id);
-//    }
-
-//    @PostMapping("/addUser")
-//    public User postDetails(User user){
-//        return userService.saveDetails(user);
-//    }
-//
-//    @GetMapping("/user")
-//    public String getUser(){
-//        return "User added. Hello, user!";
-//    }
+    @PostMapping
+    public ResponseEntity<UserDto> registerUser(@RequestBody @Valid UserRegistrationDto userRegistrationDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userRegistrationDto));
+    }
 
 }
 

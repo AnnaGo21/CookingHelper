@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/food")
+@RequestMapping("api/foods")
 public class FoodController {
     private final FoodService foodService;
 
@@ -20,19 +20,18 @@ public class FoodController {
         this.foodService = foodService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Food> getAllFood(){
         return foodService.getAllFoods();
     }
 
-    @GetMapping("/Iid")
+    @GetMapping("/ingredient_id")
     public Food getFoodByIngredientId(@RequestParam int id){
         return foodService.getFoodByIngredientId(id);
     }
 
-    @GetMapping("/Rid")
+    @GetMapping("/recipe_id")
     public Food getFoodByRecipeId(@RequestParam int id){
         return foodService.getFoodByRecipeId(id);
     }
-
 }
