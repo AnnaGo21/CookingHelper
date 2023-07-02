@@ -21,7 +21,7 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @PostMapping("/addUser")
+    @PutMapping("/user")
     public User postDetails(@RequestBody User user){
         return userService.saveDetails(user);
     }

@@ -18,13 +18,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "username")
     private String username;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
-    private List<Recipe> recipes;
+//    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+//    private List<Recipe> recipes;
 
 }
 

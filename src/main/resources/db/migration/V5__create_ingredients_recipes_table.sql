@@ -3,6 +3,6 @@ CREATE TABLE INGREDIENTS_RECIPES (
      quantity DOUBLE,
      recipe_id INT,
      ingredient_id INT,
-     FOREIGN KEY (recipe_id) REFERENCES RECIPE(recipeId),
-     FOREIGN KEY (ingredient_id) REFERENCES INGREDIENTS(ingredientID)
+     FOREIGN KEY (recipe_id) REFERENCES RECIPE(recipe_id),
+     FOREIGN KEY (ingredient_id) REFERENCES INGREDIENTS(ingredient_id)
 );

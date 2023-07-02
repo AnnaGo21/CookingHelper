@@ -43,6 +43,7 @@ public class Recipe {
     @CollectionTable(name = "RECIPE_STEPS", joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "step")
     private List<String> steps;
+
     /*
     * JPA treats it as a separate table in the database.
     * The steps table will have a foreign key to the Recipe table to establish the relationship.
