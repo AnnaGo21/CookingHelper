@@ -1,14 +1,9 @@
 package com.example.demo.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-
 @Data
 @Entity
 @Table(name = "INGREDIENTS_RECIPES")
@@ -29,7 +24,6 @@ public class IngredientsRecipes {
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "food_id")
     private Food food;

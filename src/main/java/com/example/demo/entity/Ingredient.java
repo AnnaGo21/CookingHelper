@@ -17,7 +17,7 @@ public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingredient_id")
-    private int ingredientID;
+    private int ingredientId; ////////////////////////////
 
     @Column(name = "ingredient_name")
     private String ingredientName;

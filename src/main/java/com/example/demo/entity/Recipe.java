@@ -20,6 +20,15 @@ public class Recipe {
     @Column(name = "recipe_id")
     private int recipeId;
 
+
+    @Column(name = "food_id")
+    private int foodId;
+
+//    @ManyToOne
+//    @JoinColumn(name = "food_id")
+//    private Food food;
+
+
     @Column(name = "recipe_name")
     private String recipeName;
 
@@ -42,13 +51,13 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<IngredientsRecipes> ingredientsRecipesList;
 
-    @ManyToMany
-    @JoinTable(
-            name = "FOOD_RECIPES",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "food_id")
-    )
-    private List<Food> foodList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "FOOD_RECIPES",
+//            joinColumns = @JoinColumn(name = "recipe_id"),
+//            inverseJoinColumns = @JoinColumn(name = "food_id")
+//    )
+//    private List<Food> foodList;
 
     @ElementCollection
     @CollectionTable(name = "RECIPE_STEPS", joinColumns = @JoinColumn(name = "recipe_id"))

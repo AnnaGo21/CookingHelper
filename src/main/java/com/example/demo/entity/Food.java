@@ -2,9 +2,7 @@ package com.example.demo.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class Food {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "measurementUnit")
+    @Column(name = "measurement_unit")
     private String measurementUnit;
 
     @Column(name = "calories")
@@ -48,41 +46,10 @@ public class Food {
     @OneToMany(mappedBy = "food", cascade = CascadeType.ALL) // One food -> many ingredients
     private List<IngredientsRecipes> ingredientsRecipesList;
 
+
 //    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL) // One food (pizza) has many kind of recipes
 //    private List<Recipe> recipeList;
 
-
-    public double getCalories() {
-        return calories;
-    }
-
-    public void setCalories(double calories) {
-        this.calories = calories;
-    }
-
-    public double getFat() {
-        return fat;
-    }
-
-    public void setFat(double fat) {
-        this.fat = fat;
-    }
-
-    public double getCarbohydrates() {
-        return carbohydrates;
-    }
-
-    public void setCarbohydrates(double carbohydrates) {
-        this.carbohydrates = carbohydrates;
-    }
-
-    public double getProtein() {
-        return proteins;
-    }
-
-    public void setProtein(double protein) {
-        this.proteins = protein;
-    }
 }
 
 

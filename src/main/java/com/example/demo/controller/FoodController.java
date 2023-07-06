@@ -24,9 +24,7 @@ public class FoodController {
         return new ArrayList<>();
         //return foodService.getAllFoods();
     }
-
-
-    // Create DTO classes for all entities
+    
 
     @GetMapping("/ingredient_id/{ingredientId}")
     public List<FoodDto> getFoodByIngredientId(@PathVariable int ingredientId){

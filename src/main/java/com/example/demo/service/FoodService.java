@@ -5,12 +5,14 @@ import com.example.demo.entity.Food;
 import com.example.demo.entity.Ingredient;
 import com.example.demo.repository.FoodRepository;
 import com.example.demo.repository.IngredientRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class FoodService {
     private final FoodRepository foodRepository;
@@ -29,11 +31,11 @@ public class FoodService {
         Food existingFood = foodRepository.findById(foodId)
                 .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
         existingFood.setFoodName(updatedFood.getFoodName());
-        existingFood.setProtein(updatedFood.getProtein());
+        existingFood.setProteins(updatedFood.getProteins());
         existingFood.setFat(updatedFood.getFat());
         existingFood.setCarbohydrates(updatedFood.getCarbohydrates());
         existingFood.setCalories(updatedFood.getCalories());
-        return foodRepository.save(existingFood);
+        return existingFood;
     }
 
     public void deleteFood(int foodId) {
@@ -65,11 +67,11 @@ public class FoodService {
     }
 
     public List<FoodDto> getFoodByIngredientId(int ingredientId) {
-        //return foodRepository.findByIngredientsRecipesListIngredientIngredientID(ingredientId);
         Ingredient ingredient = ingredientRepository.findById(ingredientId).get();
         return ingredient.getIngredientsRecipesList()
                 .stream()
-                .map(ingredientsRecipes -> FoodToFoodDto(ingredientsRecipes.getFood()))
+                .map(ingredientsRecipes ->
+                        FoodToFoodDto(foodRepository.getByFoodId(ingredientsRecipes.getRecipe().getFoodId())))
                 .collect(Collectors.toList());
     }
 
