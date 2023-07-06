@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.userDto;
+import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
@@ -40,7 +40,7 @@ public class UserService {
                 userRegistrationDto.getEmail());
     }
 
-    public userDto createUser(UserRegistrationDto userRegistrationDto) {
+    public UserDto createUser(UserRegistrationDto userRegistrationDto) {
         if (!userRegistrationDto.getPassword().equals(userRegistrationDto.getPasswordConfirmation())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
@@ -58,7 +58,7 @@ public class UserService {
 
         userRepository.save(registeredUser);
 
-        userDto userDto = userMapper.UserToUserDto(registeredUser);
+        UserDto userDto = userMapper.UserToUserDto(registeredUser);
 
         return userDto;
     }

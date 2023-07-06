@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.userDto;
+import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
@@ -34,7 +34,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public userDto registerUser(@RequestBody @Valid UserRegistrationDto userRegistrationDto) {
+    public UserDto registerUser(@RequestBody @Valid UserRegistrationDto userRegistrationDto) {
         return userService.createUser(userRegistrationDto);
     }
 

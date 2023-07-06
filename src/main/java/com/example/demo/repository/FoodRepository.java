@@ -23,7 +23,9 @@ public interface FoodRepository extends JpaRepository<Food, Integer> {
 
     List<Food> findByProteinsGreaterThanEqual(double minProteins);
 
-    Food findByIngredientsRecipesListIngredientIngredientID(int ingredientID);
+    //
+    // List<Food> findByIngredientsRecipesListIngredientIngredientID(int ingredientID);
+   // List<Food> findAllByIng
 
     Food findByIngredientsRecipesListRecipeRecipeId(int recipeId);
 }

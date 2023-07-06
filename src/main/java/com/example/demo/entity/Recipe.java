@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -53,6 +54,11 @@ public class Recipe {
     @CollectionTable(name = "RECIPE_STEPS", joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "step")
     private List<String> steps;
+
+//    @JsonIgnore
+//    @ManyToOne
+//    @JoinColumn(name = "food_id")
+//    private Food food;
 
     /*
     * JPA treats it as a separate table in the database.

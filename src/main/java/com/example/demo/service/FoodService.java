@@ -1,18 +1,24 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.FoodDto;
 import com.example.demo.entity.Food;
+import com.example.demo.entity.Ingredient;
 import com.example.demo.repository.FoodRepository;
+import com.example.demo.repository.IngredientRepository;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FoodService {
     private final FoodRepository foodRepository;
+    private final IngredientRepository ingredientRepository;
 
-    public FoodService(FoodRepository foodRepository) {
+    public FoodService(FoodRepository foodRepository, IngredientRepository ingredientRepository) {
         this.foodRepository = foodRepository;
+        this.ingredientRepository = ingredientRepository;
     }
 
     public Food createFood(Food food) {
@@ -58,8 +64,23 @@ public class FoodService {
         return foodRepository.findByCarbohydratesGreaterThanEqual(minCarbohydrates);
     }
 
-    public Food getFoodByIngredientId(int ingredientId) {
-        return foodRepository.findByIngredientsRecipesListIngredientIngredientID(ingredientId);
+    public List<FoodDto> getFoodByIngredientId(int ingredientId) {
+        //return foodRepository.findByIngredientsRecipesListIngredientIngredientID(ingredientId);
+        Ingredient ingredient = ingredientRepository.findById(ingredientId).get();
+        return ingredient.getIngredientsRecipesList()
+                .stream()
+                .map(ingredientsRecipes -> FoodToFoodDto(ingredientsRecipes.getFood()))
+                .collect(Collectors.toList());
+    }
+
+    private FoodDto FoodToFoodDto(Food food){
+        return FoodDto.builder()
+                .foodName(food.getFoodName())
+                .carbohydrates(food.getCarbohydrates())
+                .fat(food.getFat())
+                .calories(food.getCalories())
+                .proteins(food.getProteins())
+                .build();
     }
 
     public Food getFoodByRecipeId(int recipeId){

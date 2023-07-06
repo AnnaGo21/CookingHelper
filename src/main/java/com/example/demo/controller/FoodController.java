@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.FoodDto;
 import com.example.demo.entity.Food;
 import com.example.demo.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class FoodController {
     // Create DTO classes for all entities
 
     @GetMapping("/ingredient_id/{ingredientId}")
-    public Food getFoodByIngredientId(@PathVariable int ingredientId){
+    public List<FoodDto> getFoodByIngredientId(@PathVariable int ingredientId){
         return foodService.getFoodByIngredientId(ingredientId);
     }
 

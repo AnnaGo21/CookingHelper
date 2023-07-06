@@ -1,6 +1,6 @@
 package com.example.demo.util;
 
-import com.example.demo.dto.userDto;
+import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.entity.User;
 import lombok.AllArgsConstructor;
@@ -24,8 +24,8 @@ public class UserMapper {
         return result;
     }
 
-    public userDto UserToUserDto(User user) {
-        return new userDto(user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail());
+    public UserDto UserToUserDto(User user) {
+        return new UserDto(user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail());
     }
 
 }
