@@ -3,15 +3,13 @@ package com.example.demo.controller;
 import com.example.demo.entity.Food;
 import com.example.demo.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/foods")
+@RequestMapping("api/food")
 public class FoodController {
     private final FoodService foodService;
 
@@ -22,16 +20,20 @@ public class FoodController {
 
     @GetMapping
     public List<Food> getAllFood(){
-        return foodService.getAllFoods();
+        return new ArrayList<>();
+        //return foodService.getAllFoods();
     }
 
-    @GetMapping("/ingredient_id")
-    public Food getFoodByIngredientId(@RequestParam int id){
-        return foodService.getFoodByIngredientId(id);
+
+    // Create DTO classes for all entities
+
+    @GetMapping("/ingredient_id/{ingredientId}")
+    public Food getFoodByIngredientId(@PathVariable int ingredientId){
+        return foodService.getFoodByIngredientId(ingredientId);
     }
 
-    @GetMapping("/recipe_id")
-    public Food getFoodByRecipeId(@RequestParam int id){
-        return foodService.getFoodByRecipeId(id);
+    @GetMapping("/recipe/{recipeId}")
+    public Food getFoodByRecipeId(@PathVariable int recipeId){
+        return foodService.getFoodByRecipeId(recipeId);
     }
 }

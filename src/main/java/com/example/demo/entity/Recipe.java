@@ -16,12 +16,22 @@ import java.util.List;
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "recipe_id")
     private int recipeId;
 
+    @Column(name = "recipe_name")
     private String recipeName;
+
+    @Column(name = "cooking_time")
     private int cookingTime;
+
+    @Column(name = "difficulty")
     private String difficulty;
+
+    @Column(name = "cuisine")
     private String cuisine;
+
+    @Column(name = "is_public")
     private boolean isPublic;
 
     @ManyToOne

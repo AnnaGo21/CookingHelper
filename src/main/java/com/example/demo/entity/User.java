@@ -23,6 +23,9 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "first_name")
     private String firstName;
 
@@ -39,6 +42,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    public void addRole(Role role) {
+        roles.add(role);
+    }
 
 //    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
 //    private List<Recipe> recipes;

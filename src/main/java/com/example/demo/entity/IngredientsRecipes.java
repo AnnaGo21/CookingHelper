@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,14 +22,16 @@ public class IngredientsRecipes {
     private double quantity;
 
     @ManyToOne
-    @JoinColumn(name = "recipe_id") // foreign key
+    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
     @ManyToOne
-    @JoinColumn(name = "ingredient_id") // foreign key
+    @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 
-    @ManyToOne // Many ingredients -> one food
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "food_id")
     private Food food;
 }
 

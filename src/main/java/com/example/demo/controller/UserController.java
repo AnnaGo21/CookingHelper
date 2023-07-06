@@ -1,13 +1,12 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.userDto;
 import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +33,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> registerUser(@RequestBody @Valid UserRegistrationDto userRegistrationDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userRegistrationDto));
+    @ResponseStatus(HttpStatus.CREATED)
+    public userDto registerUser(@RequestBody @Valid UserRegistrationDto userRegistrationDto) {
+        return userService.createUser(userRegistrationDto);
     }
 
 }

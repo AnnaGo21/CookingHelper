@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class SecurityUser implements UserDetails {
+public class MyUserDetails implements UserDetails {
 
     private User user;
 
@@ -21,7 +21,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getHashedPassword();
+        return user.getPassword();
     }
 
     @Override

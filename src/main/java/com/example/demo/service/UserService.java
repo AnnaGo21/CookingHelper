@@ -1,16 +1,15 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.userDto;
 import com.example.demo.dto.UserRegistrationDto;
-import com.example.demo.entity.Recipe;
+import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.util.UserMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.dao.DataAccessException;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +19,7 @@ public class UserService {
 
     private UserRepository userRepository;
     private final UserMapper userMapper;
+    private final RoleRepository roleRepository;
 
     public User saveDetails(User user){
         return userRepository.save(user);
@@ -40,13 +40,27 @@ public class UserService {
                 userRegistrationDto.getEmail());
     }
 
-    public UserDto createUser(UserRegistrationDto userRegistrationDto) {
-        if (!userRegistrationDto.getPassword().equals(userRegistrationDto.getConfirmationPassword())) {
+    public userDto createUser(UserRegistrationDto userRegistrationDto) {
+        if (!userRegistrationDto.getPassword().equals(userRegistrationDto.getPasswordConfirmation())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
+        if (userRepository.existsByEmail(userRegistrationDto.getEmail())) {
+            throw new IllegalArgumentException("User by mentioned email already exists");
+        }
+        if (userRepository.existsByUsername(userRegistrationDto.getUsername())){
+            throw new IllegalArgumentException("User by mentioned username already exists");
+        }
 
-        User registeredUser = userMapper.UserRegistrationDtoToUser(userRegistrationDto);
-        return registeredUser;
+        User registeredUser = userMapper.userRegistrationDtoToUser(userRegistrationDto);
+
+        Role role = roleRepository.findRoleByName("USER");
+        registeredUser.addRole(role);
+
+        userRepository.save(registeredUser);
+
+        userDto userDto = userMapper.UserToUserDto(registeredUser);
+
+        return userDto;
     }
 }
 

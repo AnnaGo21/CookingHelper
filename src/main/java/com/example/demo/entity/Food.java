@@ -17,15 +17,31 @@ public class Food {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int foodID;
+    @Column(name = "food_id")
+    private int foodId;
 
+    @Column(name = "food_name")
     private String foodName;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "type")
     private String type;
+
+    @Column(name = "measurementUnit")
     private String measurementUnit;
+
+    @Column(name = "calories")
     private double calories;
+
+    @Column(name = "fat")
     private double fat;
+
+    @Column(name = "carbohydrates")
     private double carbohydrates;
+
+    @Column(name = "proteins")
     private double proteins;
 
 
