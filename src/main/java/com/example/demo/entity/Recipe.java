@@ -46,12 +46,14 @@ public class Recipe {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
+    //@JsonIgnore
     private User createdBy;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<IngredientsRecipes> ingredientsRecipesList;
 
-//    @ManyToMany
+
+    //    @ManyToMany
 //    @JoinTable(
 //            name = "FOOD_RECIPES",
 //            joinColumns = @JoinColumn(name = "recipe_id"),

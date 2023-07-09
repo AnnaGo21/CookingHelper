@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +36,9 @@ public class User {
     @Column(name = "email")
     private String email;
 
+//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+//    private List<IngredientsRecipes> ingredientsRecipesList;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -47,6 +51,7 @@ public class User {
         roles.add(role);
     }
 
+//
 //    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
 //    private List<Recipe> recipes;
 

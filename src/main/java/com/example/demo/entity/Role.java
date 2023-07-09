@@ -2,13 +2,13 @@ package com.example.demo.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@Data
 @Entity
 @Table(name = "ROLES")
-@Getter
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role {
 
     @Id
