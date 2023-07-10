@@ -1,0 +1,10 @@
+CREATE TABLE ROLES (
+     role_id INT PRIMARY KEY AUTO_INCREMENT,
+     name VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE USER_ROLES (
+      user_id INT REFERENCES REGISTERED_USERS(id),
+      role_id INT REFERENCES ROLES(role_id),
+      PRIMARY KEY (user_id, role_id)
+);
