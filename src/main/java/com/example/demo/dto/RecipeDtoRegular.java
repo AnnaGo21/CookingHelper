@@ -29,4 +29,9 @@ public class RecipeDtoRegular {
 
     //@JsonProperty("Publicity")
     private boolean isPublic;
+
+    private double totalProteins;
+    private double totalFats;
+    private double totalCarbohydrates;
+    private double totalCalories;
 }

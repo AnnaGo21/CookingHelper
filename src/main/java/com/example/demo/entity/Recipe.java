@@ -52,6 +52,18 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<IngredientsRecipes> ingredientsRecipesList;
 
+    @Transient
+    private double totalProteins;
+
+    @Transient
+    private double totalFats;
+
+    @Transient
+    private double totalCarbohydrates;
+
+    @Transient
+    private double totalCalories;
+
 
     //    @ManyToMany
 //    @JoinTable(

@@ -66,7 +66,7 @@ public class RecipeController {
 
     @PostMapping("/carbohydrates")
     public List<RecipeDtoRegular> getRecipesByCarbohydratesAndUser(@RequestBody CarbohydratesRequest carbohydratesRequest){
-        return recipeService.searchRecipesByCaloriesAndUser(carbohydratesRequest.getUserId(),
+        return recipeService.searchRecipesByCarbohydratesAndUser(carbohydratesRequest.getUserId(),
                 carbohydratesRequest.getMinCarbohydrates());
     }
 

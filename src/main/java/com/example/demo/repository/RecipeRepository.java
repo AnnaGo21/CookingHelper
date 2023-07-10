@@ -18,12 +18,11 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     List<Recipe> findByCreatedBy(User user);
     List<Recipe> findByCreatedById(int userId);
     List<Recipe> findByIsPublic(boolean isPublic);
-    List<Recipe> findByIngredientsRecipesList_Ingredient_IngredientName(String ingredientName); // Modified path
-    List<Recipe> findByIngredientsRecipesList_Ingredient_ProteinsGreaterThanEqual(double minProtein); // Modified path
-    List<Recipe> findByIngredientsRecipesList_Ingredient_FatLessThanEqual(double maxFat); // Modified path
-    List<Recipe> findByIngredientsRecipesList_Ingredient_CaloriesGreaterThanEqual(double minCalories); // Modified path
-    List<Recipe> findByIngredientsRecipesList_Ingredient_CarbohydratesGreaterThanEqual(double minCarbohydrates); // Modified path
-
+    List<Recipe> findByIngredientsRecipesList_Ingredient_IngredientName(String ingredientName);
+    List<Recipe> findByIngredientsRecipesList_Ingredient_ProteinsGreaterThanEqual(double minProtein);
+    List<Recipe> findByIngredientsRecipesList_Ingredient_FatLessThanEqual(double maxFat);
+    List<Recipe> findByIngredientsRecipesList_Ingredient_CaloriesGreaterThanEqual(double minCalories);
+    List<Recipe> findByIngredientsRecipesList_Ingredient_CarbohydratesGreaterThanEqual(double minCarbohydrates);
 
 
     //List<Recipe> findByIngredientsRecipesListRecipe(int id);

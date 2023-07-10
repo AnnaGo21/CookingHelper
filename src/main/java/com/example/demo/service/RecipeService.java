@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.*;
-import com.example.demo.entity.Food;
-import com.example.demo.entity.IngredientsRecipes;
-import com.example.demo.entity.Recipe;
-import com.example.demo.entity.User;
+import com.example.demo.entity.*;
 import com.example.demo.repository.RecipeRepository;
 import com.example.demo.repository.UserRepository;
 import exceptions.UnauthorizedAccessException;
@@ -12,6 +9,7 @@ import org.apache.catalina.filters.RemoteIpFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,9 +48,33 @@ public class RecipeService {
 
         List<RecipeDtoRegular> recipeDtos = new ArrayList<>();
         for (Recipe recipe : recipeList){
+            calculateRecipeSummary(recipe);
             recipeDtos.add(recipeToRecipeDtoRegular(recipe));
         }
         return recipeDtos;
+    }
+
+    private void calculateRecipeSummary(Recipe recipe) {
+        List<IngredientsRecipes> ingredientsRecipesList = recipe.getIngredientsRecipesList();
+        double totalProteins = 0;
+        double totalFats = 0;
+        double totalCarbohydrates = 0;
+        double totalCalories = 0;
+
+        for (IngredientsRecipes ingredientsRecipes : ingredientsRecipesList){
+            Ingredient ingredient = ingredientsRecipes.getIngredient();
+            double quantity = ingredientsRecipes.getQuantity();
+
+            totalProteins += ingredient.getProteins() * quantity;
+            totalFats += ingredient.getFat() * quantity;
+            totalCarbohydrates += ingredient.getCarbohydrates() * quantity;
+            totalCalories += ingredient.getCalories() * quantity;
+        }
+
+        recipe.setTotalProteins(totalProteins);
+        recipe.setTotalFats(totalFats);
+        recipe.setTotalCarbohydrates(totalCarbohydrates);
+        recipe.setTotalCalories(totalCalories);
     }
 
     public void deleteRecipe(User user, int recipeID) throws UnauthorizedAccessException {
@@ -77,8 +99,8 @@ public class RecipeService {
         return recipeDtos;
     }
 
-    public Recipe getRecipeById(int id){
-        return recipeRepository.findByRecipeId(id);
+    public RecipeDtoRegular getRecipeById(int id){
+        return recipeToRecipeDtoRegular(recipeRepository.findByRecipeId(id));
     }
 
     public List<RecipeDtoRegular> getAllPublicRecipes(boolean isPublic) {
@@ -130,6 +152,7 @@ public class RecipeService {
 
     private RecipeDtoRegular recipeToRecipeDtoRegular(Recipe recipe){
         User user = recipe.getCreatedBy();
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
         if(user != null) {
             return RecipeDtoRegular.builder()
                     .creatorUserId(recipe.getCreatedBy().getId())
@@ -137,6 +160,10 @@ public class RecipeService {
                     .recipeName(recipe.getRecipeName())
                     .foodId(recipe.getFoodId())
                     .isPublic(recipe.isPublic())
+                    .totalProteins(Double.parseDouble(decimalFormat.format(recipe.getTotalProteins())))
+                    .totalFats(Double.parseDouble(decimalFormat.format(recipe.getTotalFats())))
+                    .totalCarbohydrates(Double.parseDouble(decimalFormat.format(recipe.getTotalCarbohydrates())))
+                    .totalCalories(Double.parseDouble(decimalFormat.format(recipe.getTotalCalories())))
                     .build();
         } else {
             return RecipeDtoRegular.builder()
@@ -144,6 +171,10 @@ public class RecipeService {
                     .recipeName(recipe.getRecipeName())
                     .foodId(recipe.getFoodId())
                     .isPublic(recipe.isPublic())
+                    .totalProteins(Double.parseDouble(decimalFormat.format(recipe.getTotalProteins())))
+                    .totalFats(Double.parseDouble(decimalFormat.format(recipe.getTotalFats())))
+                    .totalCarbohydrates(Double.parseDouble(decimalFormat.format(recipe.getTotalCarbohydrates())))
+                    .totalCalories(Double.parseDouble(decimalFormat.format(recipe.getTotalCalories())))
                     .build();
         }
     }
