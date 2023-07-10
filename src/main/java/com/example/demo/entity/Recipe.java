@@ -24,10 +24,6 @@ public class Recipe {
     @Column(name = "food_id")
     private int foodId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "food_id")
-//    private Food food;
-
 
     @Column(name = "recipe_name")
     private String recipeName;
@@ -52,24 +48,22 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<IngredientsRecipes> ingredientsRecipesList;
 
+    @Transient
+    private double totalProteins;
 
-    //    @ManyToMany
-//    @JoinTable(
-//            name = "FOOD_RECIPES",
-//            joinColumns = @JoinColumn(name = "recipe_id"),
-//            inverseJoinColumns = @JoinColumn(name = "food_id")
-//    )
-//    private List<Food> foodList;
+    @Transient
+    private double totalFats;
+
+    @Transient
+    private double totalCarbohydrates;
+
+    @Transient
+    private double totalCalories;
 
     @ElementCollection
     @CollectionTable(name = "RECIPE_STEPS", joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "step")
     private List<String> steps;
-
-//    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name = "food_id")
-//    private Food food;
 
     /*
     * JPA treats it as a separate table in the database.
