@@ -24,11 +24,15 @@ public class FoodService {
     private List<FoodDto> deletedFoods;
     private List<FoodDto> restoredFoods;
 
+    public List<FoodDto> getRestoredFoods() {
+        return restoredFoods;
+    }
 
     public FoodService(FoodRepository foodRepository, IngredientRepository ingredientRepository, RecipeRepository recipeRepository) {
         this.foodRepository = foodRepository;
         this.ingredientRepository = ingredientRepository;
         this.recipeRepository = recipeRepository;
+        deletedFoods = new ArrayList<>();
     }
 
 
@@ -54,7 +58,7 @@ public class FoodService {
         return existingFood;
     }
 
-    public void restoreDeletedFoods(Food deletedFood){
+    public void restoreDeletedFoods(List<FoodDto> deletedFoods){
         this.restoredFoods = new ArrayList<>();
         for (FoodDto food : deletedFoods){
             FoodDto restoredFood = createFood(food);

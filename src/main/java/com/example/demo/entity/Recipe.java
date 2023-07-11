@@ -24,10 +24,6 @@ public class Recipe {
     @Column(name = "food_id")
     private int foodId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "food_id")
-//    private Food food;
-
 
     @Column(name = "recipe_name")
     private String recipeName;
@@ -64,24 +60,10 @@ public class Recipe {
     @Transient
     private double totalCalories;
 
-
-    //    @ManyToMany
-//    @JoinTable(
-//            name = "FOOD_RECIPES",
-//            joinColumns = @JoinColumn(name = "recipe_id"),
-//            inverseJoinColumns = @JoinColumn(name = "food_id")
-//    )
-//    private List<Food> foodList;
-
     @ElementCollection
     @CollectionTable(name = "RECIPE_STEPS", joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "step")
     private List<String> steps;
-
-//    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name = "food_id")
-//    private Food food;
 
     /*
     * JPA treats it as a separate table in the database.

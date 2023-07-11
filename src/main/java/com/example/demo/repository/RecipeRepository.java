@@ -13,7 +13,7 @@ import java.util.List;
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
     Recipe findByRecipeId(int recipeId);
-    Recipe findByRecipeName(String recipeName);
+    Recipe findByRecipeNameContainingIgnoreCase(String recipeName); // Because each recipe has th unique name
     Food findByFoodId(int foodId);
     List<Recipe> findByCreatedBy(User user);
     List<Recipe> findByCreatedById(int userId);
@@ -24,6 +24,5 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     List<Recipe> findByIngredientsRecipesList_Ingredient_CaloriesGreaterThanEqual(double minCalories);
     List<Recipe> findByIngredientsRecipesList_Ingredient_CarbohydratesGreaterThanEqual(double minCarbohydrates);
 
-
-    //List<Recipe> findByIngredientsRecipesListRecipe(int id);
+    List<Recipe> findByTotalCarbohydratesBetween(double minCarbohydrates, double maxCarbohydrates);
 }

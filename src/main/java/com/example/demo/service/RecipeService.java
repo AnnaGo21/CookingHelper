@@ -4,6 +4,7 @@ import com.example.demo.dto.*;
 import com.example.demo.entity.*;
 import com.example.demo.repository.RecipeRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.request.SearchRequest;
 import exceptions.UnauthorizedAccessException;
 import org.apache.catalina.filters.RemoteIpFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private List<RecipeDtoRegular> filteredLlist;
+
 
     @Autowired
     public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository) {
@@ -56,6 +58,13 @@ public class RecipeService {
 
     private void calculateRecipeSummary(Recipe recipe) {
         List<IngredientsRecipes> ingredientsRecipesList = recipe.getIngredientsRecipesList();
+        if(ingredientsRecipesList == null){
+            recipe.setTotalProteins(0);
+            recipe.setTotalFats(0);
+            recipe.setTotalCarbohydrates(0);
+            recipe.setTotalCalories(0);
+            return;
+        }
         double totalProteins = 0;
         double totalFats = 0;
         double totalCarbohydrates = 0;
@@ -77,16 +86,25 @@ public class RecipeService {
         recipe.setTotalCalories(totalCalories);
     }
 
-    public void deleteRecipe(User user, int recipeID) throws UnauthorizedAccessException {
-        Recipe recipe = recipeRepository.findByRecipeId(recipeID);
-        if (recipe.getCreatedBy().equals(user)) {
+    public void deleteRecipe(UserDto user, int recipeId) throws UnauthorizedAccessException {
+        Recipe recipe = recipeRepository.findByRecipeId(recipeId);
+        if (userToUserDto(recipe.getCreatedBy()).equals(user)) {
             recipeRepository.delete(recipe);
         } else {
             throw new UnauthorizedAccessException("You are not authorized to delete this recipe. Only Admin or Creator can.");
         }
     }
 
-    public List<RecipeDtoRegular> getRecipesByUser(int userId) {
+    private UserDto userToUserDto(User user){
+        return UserDto.builder()
+                .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .build();
+    }
+
+    public List<RecipeDtoRegular> getRecipeDtosByUser(int userId) {
         User searchUser = userRepository.getUserById(userId);
         if(searchUser == null){
             return Collections.emptyList();
@@ -94,9 +112,19 @@ public class RecipeService {
         List<Recipe> recipeList = recipeRepository.findByCreatedById(userId);
         List<RecipeDtoRegular> recipeDtos = new ArrayList<>();
         for (Recipe recipe : recipeList){
+            calculateRecipeSummary(recipe);
             recipeDtos.add(recipeToRecipeDtoRegular(recipe));
         }
         return recipeDtos;
+    }
+
+    public RecipeDtoRegular searchRecipeByName(String recipeName) {
+        Recipe recipeByName = recipeRepository.findByRecipeNameContainingIgnoreCase(recipeName);
+        if(recipeByName != null){
+            calculateRecipeSummary(recipeByName);
+            return recipeToRecipeDtoRegular(recipeByName);
+        }
+        return null;
     }
 
     public RecipeDtoRegular getRecipeById(int id){
@@ -105,7 +133,12 @@ public class RecipeService {
 
     public List<RecipeDtoRegular> getAllPublicRecipes(boolean isPublic) {
         List<Recipe> publicRecipes = recipeRepository.findByIsPublic(isPublic);
-        return publicRecipes.stream()
+        List<Recipe> calculatedPublicRecipes = new ArrayList<>();
+        for (Recipe recipe : publicRecipes){
+            calculateRecipeSummary(recipe);
+            calculatedPublicRecipes.add(recipe);
+        }
+        return calculatedPublicRecipes.stream()
                 .map(this::recipeToRecipeDtoRegular)
                 .collect(Collectors.toList());
     }
@@ -138,6 +171,12 @@ public class RecipeService {
         return getRecipeDtoRegulars(userId, recipeList);
     }
 
+    public List<RecipeDtoRegular> findRecipesByTotalCarbohydratesBetween(int userId, double minCarbohydrates, double maxCarbohydrates){
+        List<Recipe> recipeList = recipeRepository.findByTotalCarbohydratesBetween(minCarbohydrates, maxCarbohydrates);
+        return getRecipeDtoRegulars(userId, recipeList);
+    }
+
+
     private List<RecipeDtoRegular> getRecipeDtoRegulars(int userId, List<Recipe> recipeList) {
         filteredLlist = new ArrayList<>();
         for (Recipe recipe : recipeList){
@@ -149,8 +188,113 @@ public class RecipeService {
         return filteredLlist;
     }
 
+    // For total results
+    public List<RecipeDtoRegular> searchRecipesByCarbohydratesRangeAndUser(int userId, double minCarbohydrates, double maxCarbohydrates) {
+        List<RecipeDtoRegular> recipeDtos = new ArrayList<>();
+        List<Recipe> userRecipes = getRecipesByUser(userId);
 
-    private RecipeDtoRegular recipeToRecipeDtoRegular(Recipe recipe){
+        for (Recipe recipe : userRecipes) {
+            calculateRecipeSummary(recipe);
+            User createdBy = recipe.getCreatedBy();
+
+            if (createdBy != null && createdBy.getId() == userId) {
+                if (recipe.getTotalCarbohydrates() >= minCarbohydrates && recipe.getTotalCarbohydrates() <= maxCarbohydrates) {
+                    recipeDtos.add(recipeToRecipeDtoRegular(recipe));
+                }
+            }
+        }
+        return recipeDtos;
+    }
+
+    public List<RecipeDtoRegular> searchRecipesByProteinsRangeAndUser(int userId, double minProteins, double maxProteins) {
+        List<RecipeDtoRegular> recipeDtos = new ArrayList<>();
+        List<Recipe> userRecipes = getRecipesByUser(userId);
+
+        for (Recipe recipe : userRecipes) {
+            calculateRecipeSummary(recipe);
+            User createdBy = recipe.getCreatedBy();
+
+            if (createdBy != null && createdBy.getId() == userId) {
+                if (recipe.getTotalProteins() >= minProteins && recipe.getTotalProteins() <= maxProteins) {
+                    recipeDtos.add(recipeToRecipeDtoRegular(recipe));
+                }
+            }
+        }
+        return recipeDtos;
+    }
+
+    public List<RecipeDtoRegular> searchRecipesByFatRangeAndUser(int userId, double minFats, double maxFats) {
+        List<RecipeDtoRegular> recipeDtos = new ArrayList<>();
+        List<Recipe> userRecipes = getRecipesByUser(userId);
+
+        for (Recipe recipe : userRecipes) {
+            calculateRecipeSummary(recipe);
+            User createdBy = recipe.getCreatedBy();
+
+            if (createdBy != null && createdBy.getId() == userId) {
+                if (recipe.getTotalFats() >= minFats && recipe.getTotalFats() <= maxFats) {
+                    recipeDtos.add(recipeToRecipeDtoRegular(recipe));
+                }
+            }
+        }
+        return recipeDtos;
+    }
+
+    public List<RecipeDtoRegular> searchRecipesByCaloriesRangeAndUser(int userId, double minCalories, double maxCalories) {
+        List<RecipeDtoRegular> recipeDtos = new ArrayList<>();
+        List<Recipe> userRecipes = getRecipesByUser(userId);
+
+        for (Recipe recipe : userRecipes) {
+            calculateRecipeSummary(recipe);
+            User createdBy = recipe.getCreatedBy();
+
+            if (createdBy != null && createdBy.getId() == userId) {
+                if (recipe.getTotalCalories() >= minCalories && recipe.getTotalCalories() <= maxCalories) {
+                    recipeDtos.add(recipeToRecipeDtoRegular(recipe));
+                }
+            }
+        }
+        return recipeDtos;
+    }
+
+    public List<RecipeDtoRegular> searchRecipesByNutrientRangesAndUser(int userId, SearchRequest nutrientRanges) {
+        List<RecipeDtoRegular> recipeDtos = new ArrayList<>();
+        List<Recipe> userRecipes = getRecipesByUser(userId);
+
+        for (Recipe recipe : userRecipes) {
+            calculateRecipeSummary(recipe);
+            User createdBy = recipe.getCreatedBy();
+
+            if (createdBy != null && createdBy.getId() == userId) {
+                if (isInRange(recipe.getTotalCarbohydrates(), nutrientRanges.getMinCarbohydrates(), nutrientRanges.getMaxCarbohydrates())
+                        && isInRange(recipe.getTotalFats(), nutrientRanges.getMinFats(), nutrientRanges.getMaxFats())
+                        && isInRange(recipe.getTotalProteins(), nutrientRanges.getMinProtein(), nutrientRanges.getMaxProtein())
+                        && isInRange(recipe.getTotalCalories(), nutrientRanges.getMinCalories(), nutrientRanges.getMaxCalories())) {
+                    recipeDtos.add(recipeToRecipeDtoRegular(recipe));
+                }
+            }
+        }
+        return recipeDtos;
+    }
+
+    private boolean isInRange(double value, Double min, Double max) {
+        return (min == null || value >= min) && (max == null || value <= max);
+    }
+
+
+    public List<Recipe> getRecipesByUser(int userId) {
+        User searchUser = userRepository.getUserById(userId);
+        if(searchUser == null){
+            return Collections.emptyList();
+        }
+        return recipeRepository.findByCreatedById(userId);
+    }
+
+
+
+    // For transfer to DTO classes
+
+    public RecipeDtoRegular recipeToRecipeDtoRegular(Recipe recipe){
         User user = recipe.getCreatedBy();
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         if(user != null) {
@@ -182,12 +326,7 @@ public class RecipeService {
     private RecipeDto recipeToRecipeDto(Recipe recipe){
         User createdBy = recipe.getCreatedBy();
         if (createdBy != null) {
-            UserDto userDto = UserDto.builder()
-                    .username(createdBy.getUsername())
-                    .firstName(createdBy.getFirstName())
-                    .lastName(createdBy.getLastName())
-                    .email(createdBy.getEmail())
-                    .build();
+            UserDto userDto = userToUserDto(createdBy);
 
             return RecipeDto.builder()
                     .createdByDto(userDto)
