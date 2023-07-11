@@ -155,10 +155,8 @@ class FoodServiceTest {
 
         when(foodRepository.findAll()).thenReturn(foodList);
 
-        // Act
         List<FoodDto> result = foodService.getAllFoods();
 
-        // Assert
         assertEquals(2, result.size());
         assertTrue(result.stream().anyMatch(foodDto -> foodDto.getFoodId() == food1.getFoodId()));
         assertTrue(result.stream().anyMatch(foodDto -> foodDto.getFoodId() == food2.getFoodId()));
@@ -175,10 +173,8 @@ class FoodServiceTest {
 
         when(foodRepository.findByFoodName(name)).thenReturn(foodList);
 
-        // Act
         List<FoodDto> result = foodService.searchFoodsByName(name);
 
-        // Assert
         assertEquals(1, result.size());
         assertEquals(food1.getFoodId(), result.get(0).getFoodId());
         assertEquals(food1.getFoodName(), result.get(0).getFoodName());
@@ -222,10 +218,8 @@ class FoodServiceTest {
 
         when(foodRepository.findByFatLessThanEqual(maxFat)).thenReturn(foodList);
 
-        // Act
         List<FoodDto> result = foodService.searchFoodsByFat(maxFat);
 
-        // Assert
         assertEquals(1, result.size());
         assertEquals(food1.getFoodId(), result.get(0).getFoodId());
         assertEquals(food1.getFoodName(), result.get(0).getFoodName());
