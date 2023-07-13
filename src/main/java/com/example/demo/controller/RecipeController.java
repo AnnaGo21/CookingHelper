@@ -49,18 +49,18 @@ public class RecipeController {
         }
     }
 
-    @GetMapping("byName/{recipeName}")
+    @GetMapping("/by-name/{recipeName}")
     public RecipeDtoRegular getRecipeByName(@PathVariable String recipeName){
         return recipeService.searchRecipeByName(recipeName);
     }
 
 
-    @GetMapping("byUser/{userId}")
+    @GetMapping("/by-user/{userId}")
     public List<RecipeDtoRegular> getRecipesByUser(@PathVariable int userId){
         return recipeService.getRecipeDtosByUser(userId);
     }
 
-    @GetMapping("publicRecipes")
+    @GetMapping("/recipes")
     public List<RecipeDtoRegular> getAllPublicRecipes(){
         return recipeService.getAllPublicRecipes(true);
     }
@@ -93,32 +93,32 @@ public class RecipeController {
     }
 
     // For total results
-    @PostMapping("/carbohydratesRange")
+    @PostMapping("/carbohydrates-range")
     public List<RecipeDtoRegular> getRecipesByCarbohydratesRangeAndUser(@RequestBody SearchRequest request){
         return recipeService.searchRecipesByCarbohydratesRangeAndUser(request.getUserId(),
                 request.getMinCarbohydrates(), request.getMaxCarbohydrates());
     }
 
-    @PostMapping("/proteinsRange")
+    @PostMapping("/proteins-range")
     public List<RecipeDtoRegular> getRecipesByProteinsRangeAndUser(@RequestBody SearchRequest request){
         return recipeService.searchRecipesByProteinsRangeAndUser(request.getUserId(),
                 request.getMinProtein(), request.getMaxProtein());
     }
 
-    @PostMapping("/fatRange")
+    @PostMapping("/fat-range")
     public List<RecipeDtoRegular> searchRecipesByFatRangeAndUser(@RequestBody SearchRequest request){
         return recipeService.searchRecipesByFatRangeAndUser(request.getUserId(),
                 request.getMinFats(), request.getMaxFats());
     }
 
-    @PostMapping("/caloriesRange")
+    @PostMapping("/calories-range")
     public List<RecipeDtoRegular> searchRecipesByCaloriesRangeAndUser(@RequestBody SearchRequest request){
         return recipeService.searchRecipesByCaloriesRangeAndUser(request.getUserId(),
                 request.getMinCalories(), request.getMaxCalories());
     }
 
     // To enter all together
-    @PostMapping("/nutrientsRange")
+    @PostMapping("/nutrients-range")
     public List<RecipeDtoRegular> searchRecipesByNutrientRangesAndUser(@RequestBody SearchRequest nutrientRanges) {
         return recipeService.searchRecipesByNutrientRangesAndUser(nutrientRanges.getUserId(), nutrientRanges);
     }

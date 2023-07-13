@@ -37,5 +37,5 @@ public class RecipeDto {
     private int cookingTime;
     private String cuisine;
 
-    private List<IngredientsRecipes> ingredientsRecipesList; // There is Food, which has proteins and so on
+    private List<IngredientsRecipes> ingredientsRecipesList;
 }

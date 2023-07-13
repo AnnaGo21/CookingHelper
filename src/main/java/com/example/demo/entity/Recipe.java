@@ -42,7 +42,7 @@ public class Recipe {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    //@JsonIgnore
+
     private User createdBy;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
@@ -55,7 +55,7 @@ public class Recipe {
     private double totalFats;
 
     @Transient
-    private double totalCarbohydrates;
+    private Double totalCarbohydrates;
 
     @Transient
     private double totalCalories;

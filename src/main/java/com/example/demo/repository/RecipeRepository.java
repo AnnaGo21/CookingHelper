@@ -24,5 +24,5 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     List<Recipe> findByIngredientsRecipesList_Ingredient_CaloriesGreaterThanEqual(double minCalories);
     List<Recipe> findByIngredientsRecipesList_Ingredient_CarbohydratesGreaterThanEqual(double minCarbohydrates);
 
-    List<Recipe> findByTotalCarbohydratesBetween(double minCarbohydrates, double maxCarbohydrates);
+    //List<Recipe> findByTotalCarbohydratesBetween(double minCarbohydrates, double maxCarbohydrates);
 }

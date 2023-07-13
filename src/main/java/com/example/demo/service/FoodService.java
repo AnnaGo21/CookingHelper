@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.hibernate.validator.internal.util.Contracts.assertTrue;
+
 @Transactional
 @Service
 public class FoodService {
@@ -132,15 +134,25 @@ public class FoodService {
 
 
     public List<FoodDto> getFoodByIngredientId(int ingredientId) {
-        Ingredient ingredient = ingredientRepository.findById(ingredientId).get();
-        if (ingredient == null) {
-            return Collections.emptyList();
-        }
-        return ingredient.getIngredientsRecipesList()
+//        Ingredient ingredient = ingredientRepository.findById(ingredientId).get();
+//        if (ingredient == null) {
+//            return Collections.emptyList();
+//        }
+//        return ingredient.getIngredientsRecipesList()
+//                .stream()
+//                .map(ingredientsRecipes ->
+//                        foodToFoodDto(foodRepository.getByFoodId(ingredientsRecipes.getRecipe().getFoodId())))
+//                .collect(Collectors.toList());
+        Optional ingredient = ingredientRepository.findById(ingredientId);
+        if(ingredient.isPresent()){
+            Ingredient ingredient1 = ingredientRepository.findById(ingredientId).get();
+            return ingredient1.getIngredientsRecipesList()
                 .stream()
                 .map(ingredientsRecipes ->
                         foodToFoodDto(foodRepository.getByFoodId(ingredientsRecipes.getRecipe().getFoodId())))
                 .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
 

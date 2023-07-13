@@ -61,13 +61,13 @@ public class RecipeService {
         if(ingredientsRecipesList == null){
             recipe.setTotalProteins(0);
             recipe.setTotalFats(0);
-            recipe.setTotalCarbohydrates(0);
+            recipe.setTotalCarbohydrates(0.0);
             recipe.setTotalCalories(0);
             return;
         }
         double totalProteins = 0;
         double totalFats = 0;
-        double totalCarbohydrates = 0;
+        double totalCarbohydrates = 0.0;
         double totalCalories = 0;
 
         for (IngredientsRecipes ingredientsRecipes : ingredientsRecipesList){
@@ -171,10 +171,10 @@ public class RecipeService {
         return getRecipeDtoRegulars(userId, recipeList);
     }
 
-    public List<RecipeDtoRegular> findRecipesByTotalCarbohydratesBetween(int userId, double minCarbohydrates, double maxCarbohydrates){
-        List<Recipe> recipeList = recipeRepository.findByTotalCarbohydratesBetween(minCarbohydrates, maxCarbohydrates);
-        return getRecipeDtoRegulars(userId, recipeList);
-    }
+//    public List<RecipeDtoRegular> findRecipesByTotalCarbohydratesBetween(int userId, double minCarbohydrates, double maxCarbohydrates){
+//        List<Recipe> recipeList = recipeRepository.findByTotalCarbohydratesBetween(minCarbohydrates, maxCarbohydrates);
+//        return getRecipeDtoRegulars(userId, recipeList);
+//    }
 
 
     private List<RecipeDtoRegular> getRecipeDtoRegulars(int userId, List<Recipe> recipeList) {
@@ -190,21 +190,13 @@ public class RecipeService {
 
     // For total results
     public List<RecipeDtoRegular> searchRecipesByCarbohydratesRangeAndUser(int userId, double minCarbohydrates, double maxCarbohydrates) {
-        List<RecipeDtoRegular> recipeDtos = new ArrayList<>();
         List<Recipe> userRecipes = getRecipesByUser(userId);
 
-        for (Recipe recipe : userRecipes) {
-            calculateRecipeSummary(recipe);
-            User createdBy = recipe.getCreatedBy();
-
-            if (createdBy != null && createdBy.getId() == userId) {
-                if (recipe.getTotalCarbohydrates() >= minCarbohydrates && recipe.getTotalCarbohydrates() <= maxCarbohydrates) {
-                    recipeDtos.add(recipeToRecipeDtoRegular(recipe));
-                }
-            }
-        }
-        return recipeDtos;
+        return userRecipes.stream().filter(recipe -> recipe.getCreatedBy() != null && recipe.getCreatedBy().getId() == userId).
+                filter(recipe ->recipe.getTotalCarbohydrates() >= minCarbohydrates && recipe.getTotalCarbohydrates() <= maxCarbohydrates).
+                map(recipe -> recipeToRecipeDtoRegular(recipe)).collect(Collectors.toList());
     }
+
 
     public List<RecipeDtoRegular> searchRecipesByProteinsRangeAndUser(int userId, double minProteins, double maxProteins) {
         List<RecipeDtoRegular> recipeDtos = new ArrayList<>();

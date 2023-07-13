@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -59,6 +60,7 @@ class RecipeServiceTest {
         recipe.setRecipeId(1);
         recipe.setCreatedBy(user);
         recipe.setRecipeName("Greek Salad");
+        recipe.setTotalCarbohydrates(200.00);
 
 //        recipes = Arrays.asList(
 //                createRecipe(1, "Greek Salad", true),
@@ -70,6 +72,7 @@ class RecipeServiceTest {
     void tearDown() throws Exception {
         autoCloseable.close();
         recipes = new ArrayList<>();
+        Mockito.reset();
     }
 
     @Test
@@ -279,15 +282,23 @@ class RecipeServiceTest {
 
     @Test
     void searchRecipesByCarbohydratesRangeAndUser() {
-        int userId = 0;
+        reset(recipeRepository);
+
+        Recipe recipe1 = new Recipe();
+        recipe1.setRecipeId(1);
+        recipe1.setCreatedBy(user);
+        recipe1.setRecipeName("Greek Salad");
+        recipe1.setTotalCarbohydrates(200.00);
+        int userId = user.getId();
         double minCarbohydrates = 1;
         double maxCarbohydrates = 200;
-        List<Recipe> expectedRecipes = Collections.singletonList(recipe);
+        List<Recipe> expectedRecipes = List.of(recipe1);
 
-        when(recipeRepository.findByTotalCarbohydratesBetween(minCarbohydrates, maxCarbohydrates)).thenReturn(expectedRecipes);
+        //when(recipeRepository.findByTotalCarbohydratesBetween(minCarbohydrates, maxCarbohydrates)).thenReturn(expectedRecipes);
         when(userRepository.getUserById(userId)).thenReturn(user);
         when(recipeRepository.findByCreatedById(userId)).thenReturn(expectedRecipes);
         List<RecipeDtoRegular> actualRecipes = recipeService.searchRecipesByCarbohydratesRangeAndUser(userId, minCarbohydrates, maxCarbohydrates);
+
 
         assertEquals(expectedRecipes.size(), actualRecipes.size());
 
