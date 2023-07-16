@@ -17,7 +17,7 @@ public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingredient_id")
-    private int ingredientId; ////////////////////////////
+    private int ingredientId;
 
     @Column(name = "ingredient_name")
     private String ingredientName;
@@ -29,7 +29,7 @@ public class Ingredient {
     private String ingredientType;
 
     @Column(name = "measurement_unit")
-    private String measurementUnit; // ml or gr
+    private String measurementUnit;
 
     @Column(name = "calories")
     private double calories;

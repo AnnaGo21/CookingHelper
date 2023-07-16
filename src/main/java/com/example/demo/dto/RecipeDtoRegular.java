@@ -12,11 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class RecipeDtoRegular {
-
-    //private User createdBy;
 
     private int creatorUserId;
 
