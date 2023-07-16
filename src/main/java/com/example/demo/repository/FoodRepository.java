@@ -15,21 +15,19 @@ import java.util.List;
 
 @Repository
 public interface FoodRepository extends JpaRepository<Food, Integer> {
-    List<Food> findByFoodName(String foodName);
+    List<Food> findAllByType(String type);
+
+    Food findByFoodName(String foodName);
 
     Food getByFoodId(int foodId);
 
     List<Food> findByCaloriesGreaterThanEqual(double minCalories);
-    //List<Food> findByIngredientsRecipesListCre
 
     List<Food> findByFatLessThanEqual(double maxFat);
 
     List<Food> findByCarbohydratesGreaterThanEqual(double minCarbohydrates);
 
     List<Food> findByProteinsGreaterThanEqual(double minProteins);
-
-//    Food findByIngredientsRecipesListRecipeRecipeId(int recipeId);
-//    List<Food> findByType(String type);
 
 }
 

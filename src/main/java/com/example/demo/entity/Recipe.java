@@ -55,7 +55,7 @@ public class Recipe {
     private double totalFats;
 
     @Transient
-    private Double totalCarbohydrates;
+    private double totalCarbohydrates;
 
     @Transient
     private double totalCalories;

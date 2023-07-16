@@ -42,13 +42,50 @@ public class Food {
     @Column(name = "proteins")
     private double proteins;
 
+    @Transient
+    private double totalProteins;
 
-    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL) // One food -> many ingredients
+    @Transient
+    private double totalFats;
+
+    @Transient
+    private double totalCarbohydrates;
+
+    @Transient
+    private double totalCalories;
+
+
+    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
     private List<IngredientsRecipes> ingredientsRecipesList;
 
+    public Food(int foodId, String foodName, String description, String type, String measurementUnit, double calories,
+                double fat, double carbohydrates, double proteins, List<IngredientsRecipes> ingredientsRecipes) {
+        this.foodId = foodId;
+        this.foodName = foodName;
+        this.description = description;
+        this.type = type;
+        this.measurementUnit = measurementUnit;
+        this.calories = calories;
+        this.fat = fat;
+        this.carbohydrates = carbohydrates;
+        this.proteins = proteins;
+        this.ingredientsRecipesList = ingredientsRecipesList;
+    }
 
-//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL) // One food (pizza) has many kind of recipes
-//    private List<Recipe> recipeList;
+    @Override
+    public String toString() {
+        return "Food{" +
+                "foodId=" + foodId +
+                ", foodName='" + foodName + '\'' +
+                ", description='" + description + '\'' +
+                ", type='" + type + '\'' +
+                ", measurementUnit='" + measurementUnit + '\'' +
+                ", calories=" + calories +
+                ", fat=" + fat +
+                ", carbohydrates=" + carbohydrates +
+                ", proteins=" + proteins +
+                '}';
+    }
 
 }
 

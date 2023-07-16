@@ -4,6 +4,7 @@ import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
+import com.example.demo.model.ERole;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.util.UserMapper;
@@ -53,7 +54,7 @@ public class UserService {
 
         User registeredUser = userMapper.userRegistrationDtoToUser(userRegistrationDto);
 
-        Role role = roleRepository.findRoleByName("USER");
+        Role role = roleRepository.findRoleByName(ERole.USER);
         registeredUser.addRole(role);
 
         userRepository.save(registeredUser);

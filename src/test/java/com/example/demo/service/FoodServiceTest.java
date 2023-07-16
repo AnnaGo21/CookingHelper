@@ -2,9 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.dto.FoodDto;
 import com.example.demo.entity.Food;
-import com.example.demo.entity.Ingredient;
-import com.example.demo.entity.IngredientsRecipes;
 import com.example.demo.entity.Recipe;
+import com.example.demo.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +27,7 @@ class FoodServiceTest {
     private IngredientRepository ingredientRepository;
     private RecipeRepository recipeRepository;
     private FoodService foodService;
+    private UserRepository userRepository;
     FoodDto foodDto;
     Food food;
 
@@ -52,7 +52,7 @@ class FoodServiceTest {
         foodRepository = mock(FoodRepository.class);
         ingredientRepository = mock(IngredientRepository.class);
         recipeRepository = mock(RecipeRepository.class);
-        foodService = new FoodService(foodRepository, ingredientRepository, recipeRepository);
+        foodService = new FoodService(foodRepository, ingredientRepository, recipeRepository, userRepository);
     }
 
     @AfterEach
@@ -171,17 +171,16 @@ class FoodServiceTest {
         Food food1 = this.food;
         foodList.add(food1);
 
-        when(foodRepository.findByFoodName(name)).thenReturn(foodList);
+        when(foodRepository.findByFoodName(name)).thenReturn(food1);
 
-        List<FoodDto> result = foodService.searchFoodsByName(name);
+        FoodDto foodByName = foodService.searchFoodByName(name);
 
-        assertEquals(1, result.size());
-        assertEquals(food1.getFoodId(), result.get(0).getFoodId());
-        assertEquals(food1.getFoodName(), result.get(0).getFoodName());
-        assertEquals(food1.getCarbohydrates(), result.get(0).getCarbohydrates());
-        assertEquals(food1.getProteins(), result.get(0).getProteins());
-        assertEquals(food1.getFat(), result.get(0).getFat());
-        assertEquals(food1.getCalories(), result.get(0).getCalories());
+        assertEquals(food1.getFoodId(), foodByName.getFoodId());
+        assertEquals(food1.getFoodName(), foodByName.getFoodName());
+        assertEquals(food1.getCarbohydrates(), foodByName.getCarbohydrates());
+        assertEquals(food1.getProteins(), foodByName.getProteins());
+        assertEquals(food1.getFat(), foodByName.getFat());
+        assertEquals(food1.getCalories(), foodByName.getCalories());
 
         verify(foodRepository, times(1)).findByFoodName(name);
     }

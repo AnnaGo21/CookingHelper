@@ -13,30 +13,33 @@ public class SearchRequest {
     private int userId;
 
     @JsonProperty("minProteins")
-    private Double minProtein;
+    private double minProtein;
 
     @JsonProperty("maxProteins")
-    private Double maxProtein;
+    private double maxProtein;
 
     @JsonProperty("minFats")
-    private Double minFats;
+    private double minFats;
 
     @JsonProperty("maxFats")
-    private Double maxFats;
+    private double maxFats;
 
     @JsonProperty("minCarbohydrates")
-    private Double minCarbohydrates;
+    private double minCarbohydrates;
 
     @JsonProperty("maxCarbohydrates")
-    private Double maxCarbohydrates;
+    private double maxCarbohydrates;
 
     @JsonProperty("minCalories")
-    private Double minCalories;
+    private double minCalories;
 
     @JsonProperty("maxCalories")
-    private Double maxCalories;
+    private double maxCalories;
 
-    public SearchRequest(int userId, Double minProtein, Double maxProtein) {
+    @JsonProperty("type")
+    private String type;
+
+    public SearchRequest(int userId, double minProtein, double maxProtein) {
         this.userId = userId;
         this.minProtein = minProtein;
         this.maxProtein = maxProtein;

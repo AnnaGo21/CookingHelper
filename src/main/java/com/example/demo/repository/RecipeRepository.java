@@ -5,6 +5,7 @@ import com.example.demo.entity.Food;
 import com.example.demo.entity.Recipe;
 import com.example.demo.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,4 +26,10 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     List<Recipe> findByIngredientsRecipesList_Ingredient_CarbohydratesGreaterThanEqual(double minCarbohydrates);
 
     //List<Recipe> findByTotalCarbohydratesBetween(double minCarbohydrates, double maxCarbohydrates);
+
+//    @Query(
+//            nativeQuery = true,
+//            value = ""
+//    )
+//    List<Recipe> findAllByTotalCarbohydratesBetween(double from, double to);
 }

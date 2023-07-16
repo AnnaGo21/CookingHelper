@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.Food;
 import com.example.demo.entity.IngredientsRecipes;
+import com.example.demo.repository.FoodRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +25,7 @@ public class FoodRepositoryTest {
     void setUp(){
         ingredientsRecipesList = new ArrayList<>();
         food = new Food(0, "Fish", "Grilled fish", "Ocean fish",
-                "grams", 220, 2.1, 45, 8, ingredientsRecipesList);
+                "grams", 220.0, 2.1, 45.0, 8.0, ingredientsRecipesList);
         foodRepository.save(food);
     }
 
@@ -37,15 +37,15 @@ public class FoodRepositoryTest {
 
     @Test
     void findByFoodName_Found(){
-        List<Food> foodListByName = foodRepository.findByFoodName("Fish");
-        assertThat(foodListByName.get(0).getFoodName()).isEqualTo(food.getFoodName());
+        Food foodByName = foodRepository.findByFoodName("Fish");
+        assertThat(foodByName.getFoodName()).isEqualTo(food.getFoodName());
     }
 
     @Test
     void findByFoodName_NotFound() {
-        List<Food> foodListByName = foodRepository.findByFoodName("Apple");
+        Food foodByName = foodRepository.findByFoodName("Apple");
         // Test case fails when list is not empty, while food of mentioned name doesn't exist in list
-        assertThat(foodListByName.isEmpty()).isTrue(); // so it has to be True
+        assertThat(foodByName==null).isTrue(); // so it has to be True
     }
 
     @Test

@@ -12,5 +12,4 @@ import org.springframework.data.jpa.repository.Query;
 @AllArgsConstructor
 public class UserDto {
     String username,  firstName,  lastName,  email;
-
 }

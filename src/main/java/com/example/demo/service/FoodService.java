@@ -1,16 +1,17 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.FoodDto;
-import com.example.demo.entity.Food;
-import com.example.demo.entity.Ingredient;
-import com.example.demo.entity.Recipe;
+import com.example.demo.dto.FoodDtoRegular;
+import com.example.demo.entity.*;
 import com.example.demo.repository.FoodRepository;
 import com.example.demo.repository.IngredientRepository;
 import com.example.demo.repository.RecipeRepository;
+import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ public class FoodService {
     private final FoodRepository foodRepository;
     private final IngredientRepository ingredientRepository;
     private final RecipeRepository recipeRepository;
+    private final UserRepository userRepository;
 
     private List<FoodDto> deletedFoods;
     private List<FoodDto> restoredFoods;
@@ -30,10 +32,11 @@ public class FoodService {
         return restoredFoods;
     }
 
-    public FoodService(FoodRepository foodRepository, IngredientRepository ingredientRepository, RecipeRepository recipeRepository) {
+    public FoodService(FoodRepository foodRepository, IngredientRepository ingredientRepository, RecipeRepository recipeRepository, UserRepository userRepository) {
         this.foodRepository = foodRepository;
         this.ingredientRepository = ingredientRepository;
         this.recipeRepository = recipeRepository;
+        this.userRepository = userRepository;
         deletedFoods = new ArrayList<>();
     }
 
@@ -46,6 +49,7 @@ public class FoodService {
         newFood.setProteins(food.getProteins());
         newFood.setFat(food.getFat());
         newFood.setCalories(food.getCalories());
+        newFood.setType(food.getType());
         return foodToFoodDto(foodRepository.save(newFood));
     }
 
@@ -87,13 +91,12 @@ public class FoodService {
         return foodDtos;
     }
 
-    public List<FoodDto> searchFoodsByName(String name) {
-        List<Food> foodList = foodRepository.findByFoodName(name);
-        List<FoodDto> foodDtos = new ArrayList<>();
-        for (Food food : foodList){
-            foodDtos.add(foodToFoodDto(food));
+    public FoodDto searchFoodByName(String name) {
+        Food foodByName = foodRepository.findByFoodName(name);
+        if(foodByName == null){
+            return null;
         }
-        return foodDtos;
+        return foodToFoodDto(foodByName);
     }
 
     public List<FoodDto> searchFoodsByProtein(double minProtein) {
@@ -160,6 +163,102 @@ public class FoodService {
     public FoodDto getFoodByRecipeId(int recipeId){
         Recipe recipe = recipeRepository.getReferenceById(recipeId);
         return foodToFoodDto(foodRepository.getByFoodId(recipe.getFoodId()));
+    }
+
+    private void calculateFoodSummary(Food food) {
+        List<IngredientsRecipes> ingredientsRecipesList = food.getIngredientsRecipesList();
+        if(ingredientsRecipesList == null){
+            food.setTotalProteins(0);
+            food.setTotalFats(0);
+            food.setTotalCarbohydrates(0.0);
+            food.setTotalCalories(0);
+            return;
+        }
+        double totalProteins = 0;
+        double totalFats = 0;
+        double totalCarbohydrates = 0;
+        double totalCalories = 0;
+
+        for (IngredientsRecipes ingredientsRecipes : ingredientsRecipesList){
+            Ingredient ingredient = ingredientsRecipes.getIngredient();
+            double quantity = ingredientsRecipes.getQuantity();
+
+            totalProteins += ingredient.getProteins() * quantity;
+            totalFats += ingredient.getFat() * quantity;
+            totalCarbohydrates += ingredient.getCarbohydrates() * quantity;
+            totalCalories += ingredient.getCalories() * quantity;
+        }
+
+        food.setTotalProteins(totalProteins);
+        food.setTotalFats(totalFats);
+        food.setTotalCarbohydrates(totalCarbohydrates);
+        food.setTotalCalories(totalCalories);
+    }
+
+
+    public List<FoodDtoRegular> searchFoodByProteinsRangeAndType(String type, double minProteins, double maxProteins) {
+        List<FoodDtoRegular> foodDtos = new ArrayList<>();
+        List<Food> foodByType = foodRepository.findAllByType(type);
+
+        for (Food food : foodByType) {
+            calculateFoodSummary(food);
+            if (food.getTotalProteins() >= minProteins && food.getTotalProteins() <= maxProteins) {
+                foodDtos.add(foodToFoodDtoRegular(food));
+            }
+        }
+        return foodDtos;
+    }
+
+    public List<FoodDtoRegular> searchFoodByFatRangeAndType(String type, double minFat, double maxFat) {
+        List<FoodDtoRegular> foodDtos = new ArrayList<>();
+        List<Food> foodByType = foodRepository.findAllByType(type);
+
+        for (Food food : foodByType) {
+            calculateFoodSummary(food);
+            if (food.getTotalFats() >= minFat && food.getTotalFats() <= maxFat) {
+                foodDtos.add(foodToFoodDtoRegular(food));
+            }
+        }
+        return foodDtos;
+    }
+
+    public List<FoodDtoRegular> searchFoodByCarbohydratesRangeAndType(String type, double minCarbohydrates, double maxCarbohydrates) {
+        List<FoodDtoRegular> foodDtos = new ArrayList<>();
+        List<Food> foodByType = foodRepository.findAllByType(type);
+
+        for (Food food : foodByType) {
+            calculateFoodSummary(food);
+            if (food.getTotalCarbohydrates() >= minCarbohydrates && food.getTotalCarbohydrates() <= maxCarbohydrates) {
+                foodDtos.add(foodToFoodDtoRegular(food));
+            }
+        }
+        return foodDtos;
+    }
+
+    public List<FoodDtoRegular> searchFoodByCaloriesRangeAndType(String type, double minCalories, double maxCalories) {
+        List<FoodDtoRegular> foodDtos = new ArrayList<>();
+        List<Food> foodByType = foodRepository.findAllByType(type);
+
+        for (Food food : foodByType) {
+            calculateFoodSummary(food);
+            if (food.getTotalCalories() >= minCalories && food.getTotalCalories() <= maxCalories) {
+                foodDtos.add(foodToFoodDtoRegular(food));
+            }
+        }
+        return foodDtos;
+    }
+
+    private FoodDtoRegular foodToFoodDtoRegular(Food food) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        return FoodDtoRegular.builder()
+                .foodId(food.getFoodId())
+                .foodName(food.getFoodName())
+                .type(food.getType())
+                .totalProteins(Double.parseDouble(decimalFormat.format(food.getTotalProteins())))
+                .totalFats(Double.parseDouble(decimalFormat.format(food.getTotalFats())))
+                .totalCarbohydrates(Double.parseDouble(decimalFormat.format(food.getTotalCarbohydrates())))
+                .totalCalories(Double.parseDouble(decimalFormat.format(food.getTotalCalories())))
+                .build();
     }
 
     private FoodDto foodToFoodDto(Food food){

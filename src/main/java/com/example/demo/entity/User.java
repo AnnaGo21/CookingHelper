@@ -36,8 +36,6 @@ public class User {
     @Column(name = "email")
     private String email;
 
-//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
-//    private List<IngredientsRecipes> ingredientsRecipesList;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
@@ -51,9 +49,7 @@ public class User {
         roles.add(role);
     }
 
-//
-//    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
-//    private List<Recipe> recipes;
+
 
 }
 

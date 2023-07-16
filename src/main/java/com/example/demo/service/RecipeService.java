@@ -58,6 +58,10 @@ public class RecipeService {
 
     private void calculateRecipeSummary(Recipe recipe) {
         List<IngredientsRecipes> ingredientsRecipesList = recipe.getIngredientsRecipesList();
+//        if(recipe.getTotalCalories() != 0 || recipe.getTotalCarbohydrates() != 0 || recipe.getTotalProteins() != 0 ||
+//        recipe.getTotalProteins() != 0){
+//            return;
+//        }
         if(ingredientsRecipesList == null){
             recipe.setTotalProteins(0);
             recipe.setTotalFats(0);
@@ -190,11 +194,26 @@ public class RecipeService {
 
     // For total results
     public List<RecipeDtoRegular> searchRecipesByCarbohydratesRangeAndUser(int userId, double minCarbohydrates, double maxCarbohydrates) {
+        List<RecipeDtoRegular> recipeDtos = new ArrayList<>();
         List<Recipe> userRecipes = getRecipesByUser(userId);
 
-        return userRecipes.stream().filter(recipe -> recipe.getCreatedBy() != null && recipe.getCreatedBy().getId() == userId).
-                filter(recipe ->recipe.getTotalCarbohydrates() >= minCarbohydrates && recipe.getTotalCarbohydrates() <= maxCarbohydrates).
-                map(recipe -> recipeToRecipeDtoRegular(recipe)).collect(Collectors.toList());
+        for (Recipe recipe : userRecipes) {
+            calculateRecipeSummary(recipe);
+            User createdBy = recipe.getCreatedBy();
+
+            if (createdBy != null && createdBy.getId() == userId) {
+                if (recipe.getTotalCarbohydrates() >= minCarbohydrates && recipe.getTotalCarbohydrates() <= maxCarbohydrates) {
+                    recipeDtos.add(recipeToRecipeDtoRegular(recipe));
+                }
+            }
+        }
+        return recipeDtos;
+
+//        List<Recipe> userRecipes = getRecipesByUser(userId);
+//
+//        return userRecipes.stream().filter(recipe -> recipe.getCreatedBy() != null && recipe.getCreatedBy().getId() == userId).
+//                filter(recipe -> recipe.getTotalCarbohydrates() >= minCarbohydrates && recipe.getTotalCarbohydrates() <= maxCarbohydrates).
+//                map(recipe -> recipeToRecipeDtoRegular(recipe)).collect(Collectors.toList());
     }
 
 
@@ -342,25 +361,5 @@ public class RecipeService {
                     .ingredientsRecipesList(recipe.getIngredientsRecipesList())
                     .build();
         }
-
-
-//        List<IngredientsRecipesDto> ingredientsRecipesDTOList = new ArrayList<>();
-//        List<IngredientsRecipes> ingredientsRecipesList = recipe.getIngredientsRecipesList();
-//        if (ingredientsRecipesList != null) {
-//            for (IngredientsRecipes ingredientsRecipes : ingredientsRecipesList) {
-//                IngredientsRecipesDto ingredientsRecipesDTO = new IngredientsRecipesDto();
-//                ingredientsRecipesDTO.setIngredientId(ingredientsRecipes.getIngredient().getIngredientId());
-//                ingredientsRecipesDTO.setQuantity(ingredientsRecipes.getQuantity());
-//                ingredientsRecipesDTO.setRecipeId(ingredientsRecipesDTO.getRecipeId());
-//                ingredientsRecipesDTO.setId(ingredientsRecipesDTO.getId());
-//                ingredientsRecipesDTOList.add(ingredientsRecipesDTO);
-//            }
-//            RecipeDto.builder()
-//                    .ingredientsRecipesList(recipe.getIngredientsRecipesList());
-//        }
     }
-
-//    public Recipe getRecipeByIngredientId(int id) {
-//        return recipeRepository.getRecipeByIngredientId(id);
-//    }
 }
