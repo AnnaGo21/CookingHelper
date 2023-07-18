@@ -7,19 +7,14 @@ import com.example.demo.entity.Recipe;
 import com.example.demo.entity.User;
 import com.example.demo.repository.RecipeRepository;
 import com.example.demo.repository.UserRepository;
-import exceptions.UnauthorizedAccessException;
+import com.example.demo.exceptions.UnauthorizedAccessException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,14 +27,18 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RecipeServiceTest {
-    @Mock
+//    @Mock
     private RecipeRepository recipeRepository;
 
-    @Mock
+//    @Mock
     private UserRepository userRepository;
+//    @Mock
+    private UserService userService;
 
-    @InjectMocks
+//    @Mock
     private RecipeService recipeService;
+
+    RecipeSecurityService recipeSecurityService;
 
     AutoCloseable autoCloseable;
     Recipe recipe;
@@ -50,8 +49,9 @@ class RecipeServiceTest {
     void setUp() {
         recipeRepository = mock(RecipeRepository.class);
         userRepository = mock(UserRepository.class);
-        recipeService = new RecipeService(recipeRepository, userRepository);
-        autoCloseable = MockitoAnnotations.openMocks(this);
+        recipeSecurityService = new RecipeSecurityService(recipeRepository);
+        recipeService = new RecipeService(recipeRepository, userRepository, recipeSecurityService);
+        //autoCloseable = MockitoAnnotations.openMocks(this);
 
         user = new User();
         user.setId(1);
@@ -74,9 +74,9 @@ class RecipeServiceTest {
 
     @AfterEach
     void tearDown() throws Exception {
-        autoCloseable.close();
+        //autoCloseable.close();
         recipes = new ArrayList<>();
-        Mockito.reset();
+        //Mockito.reset();
     }
 
     @Test
@@ -287,8 +287,8 @@ class RecipeServiceTest {
     void searchRecipesByCarbohydratesRangeAndUser() {
        // reset(recipeRepository);
         int userId = 1;
-        double minCarbohydrates = 1.0;
-        double maxCarbohydrates = 200.0;
+        double minCarbohydrates = 2.00;
+        double maxCarbohydrates = 200.00;
 
         User user1 = new User();
         user1.setId(userId);
@@ -303,7 +303,7 @@ class RecipeServiceTest {
         recipe1.setRecipeId(1);
         recipe1.setCreatedBy(user1);
         recipe1.setRecipeName("Greek Salad");
-        recipe1.setTotalCarbohydrates(1.00);
+        recipe1.setTotalCarbohydrates(2.00);
 
         Recipe recipe2 = new Recipe();
         recipe2.setRecipeId(2);
@@ -336,12 +336,12 @@ class RecipeServiceTest {
 
         User user1 = new User();
         user1.setId(userId);
-        when(userRepository.getUserById(userId)).thenReturn(user1);
-
         user1.setUsername("Emma28");
         user1.setFirstName("Emma");
         user1.setLastName("Swan");
         user1.setEmail("emma.sw@gmail.com");
+        when(userRepository.getUserById(userId)).thenReturn(user1);
+
 
         Recipe recipe1 = new Recipe();
         recipe1.setRecipeId(1);

@@ -6,7 +6,8 @@ import com.example.demo.dto.UserDto;
 import com.example.demo.repository.RecipeRepository;
 import com.example.demo.request.SearchRequest;
 import com.example.demo.service.RecipeService;
-import exceptions.UnauthorizedAccessException;
+import com.example.demo.service.UserService;
+import com.example.demo.exceptions.UnauthorizedAccessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +40,8 @@ public class RecipeControllerIntTest {
     @MockBean
     private RecipeRepository recipeRepository;
 
+    private UserService userService;
+
     RecipeDtoRegular recipe1;
 
     RecipeDtoRegular recipe2;
@@ -46,7 +49,7 @@ public class RecipeControllerIntTest {
 
     @BeforeEach
     void setUp(){
-        RecipeController recipeController = new RecipeController(recipeService, recipeRepository);
+        RecipeController recipeController = new RecipeController(recipeService, recipeRepository, userService);
         mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
         recipe1 = new RecipeDtoRegular();

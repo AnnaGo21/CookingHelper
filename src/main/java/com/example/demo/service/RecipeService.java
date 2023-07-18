@@ -1,38 +1,44 @@
 package com.example.demo.service;
 
+//import com.example.demo.config.IsOwnerOrAdmin;
 import com.example.demo.dto.*;
+import com.example.demo.model.ERole;
+import com.example.demo.util.UserMapper;
 import com.example.demo.entity.*;
 import com.example.demo.repository.RecipeRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.request.SearchRequest;
-import exceptions.UnauthorizedAccessException;
-import org.apache.catalina.filters.RemoteIpFilter;
+import com.example.demo.exceptions.UnauthorizedAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
+    private final RecipeSecurityService recipeSecurityService;
     private List<RecipeDtoRegular> filteredLlist;
 
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
-    public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository) {
+    public RecipeService(RecipeRepository recipeRepository, UserRepository userRepository, RecipeSecurityService recipeSecurityService) {
         this.recipeRepository = recipeRepository;
         this.userRepository = userRepository;
+        this.recipeSecurityService = recipeSecurityService;
         filteredLlist = new ArrayList<>();
     }
 
     public RecipeDto createRecipe(RecipeDto recipeDto) {
-        User createdBy = userRepository.getUserById(recipeDto.getCreatorUserId());
+        User createdBy = userRepository.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Recipe newRecipe = new Recipe();
         newRecipe.setCreatedBy(createdBy);
         newRecipe.setRecipeId(recipeDto.getRecipeId());
@@ -44,6 +50,7 @@ public class RecipeService {
         newRecipe.setIngredientsRecipesList(recipeDto.getIngredientsRecipesList());
         return recipeToRecipeDto(recipeRepository.save(newRecipe));
     }
+
 
     public List<RecipeDtoRegular> getAllRecipes() {
         List<Recipe> recipeList = recipeRepository.findAll();
@@ -58,10 +65,6 @@ public class RecipeService {
 
     private void calculateRecipeSummary(Recipe recipe) {
         List<IngredientsRecipes> ingredientsRecipesList = recipe.getIngredientsRecipesList();
-//        if(recipe.getTotalCalories() != 0 || recipe.getTotalCarbohydrates() != 0 || recipe.getTotalProteins() != 0 ||
-//        recipe.getTotalProteins() != 0){
-//            return;
-//        }
         if(ingredientsRecipesList == null){
             recipe.setTotalProteins(0);
             recipe.setTotalFats(0);
@@ -90,13 +93,17 @@ public class RecipeService {
         recipe.setTotalCalories(totalCalories);
     }
 
-    public void deleteRecipe(UserDto user, int recipeId) throws UnauthorizedAccessException {
-        Recipe recipe = recipeRepository.findByRecipeId(recipeId);
-        if (userToUserDto(recipe.getCreatedBy()).equals(user)) {
-            recipeRepository.delete(recipe);
-        } else {
-            throw new UnauthorizedAccessException("You are not authorized to delete this recipe. Only Admin or Creator can.");
-        }
+    public void deleteRecipe(int recipeId) throws UnauthorizedAccessException {
+        UserDto user = userMapper.UserToUserDto(recipeRepository.findByRecipeId(recipeId).getCreatedBy());
+
+        String principalUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User principalUser = userRepository.getUserByUsername(principalUsername);
+        boolean isPrincipalAdmin = principalUser.getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ADMIN));
+
+        if(!user.getUsername().equals(principalUsername) && !isPrincipalAdmin)
+            throw new UnauthorizedAccessException("You are not authorized to delete this recipe. Only the creator can delete it.");
+        recipeRepository.deleteById(recipeId);
+
     }
 
     private UserDto userToUserDto(User user){
@@ -175,10 +182,6 @@ public class RecipeService {
         return getRecipeDtoRegulars(userId, recipeList);
     }
 
-//    public List<RecipeDtoRegular> findRecipesByTotalCarbohydratesBetween(int userId, double minCarbohydrates, double maxCarbohydrates){
-//        List<Recipe> recipeList = recipeRepository.findByTotalCarbohydratesBetween(minCarbohydrates, maxCarbohydrates);
-//        return getRecipeDtoRegulars(userId, recipeList);
-//    }
 
 
     private List<RecipeDtoRegular> getRecipeDtoRegulars(int userId, List<Recipe> recipeList) {
@@ -208,12 +211,6 @@ public class RecipeService {
             }
         }
         return recipeDtos;
-
-//        List<Recipe> userRecipes = getRecipesByUser(userId);
-//
-//        return userRecipes.stream().filter(recipe -> recipe.getCreatedBy() != null && recipe.getCreatedBy().getId() == userId).
-//                filter(recipe -> recipe.getTotalCarbohydrates() >= minCarbohydrates && recipe.getTotalCarbohydrates() <= maxCarbohydrates).
-//                map(recipe -> recipeToRecipeDtoRegular(recipe)).collect(Collectors.toList());
     }
 
 
@@ -304,7 +301,6 @@ public class RecipeService {
 
 
     // For transfer to DTO classes
-
     public RecipeDtoRegular recipeToRecipeDtoRegular(Recipe recipe){
         User user = recipe.getCreatedBy();
         DecimalFormat decimalFormat = new DecimalFormat("#.##");

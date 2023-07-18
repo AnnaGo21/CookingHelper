@@ -10,7 +10,11 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.util.UserMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -22,16 +26,19 @@ public class UserService {
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
 
-    public User saveDetails(User user){
-        return userRepository.save(user);
+
+
+    public UserDto getUserDtoByUsername(String username) {
+        User user = userRepository.getUserByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found.");
+        }
+        return userMapper.UserToUserDto(user);
     }
 
-    public User getUserByEmail(String email){
-        return userRepository.getUserByEmail(email);
-    }
 
-    public User getUserById(int id){
-        return userRepository.getUserById(id);
+    public UserDto getUserById(int id){
+        return userMapper.UserToUserDto(userRepository.getUserById(id));
     }
 
     private void logUserRegistration(UserRegistrationDto userRegistrationDto) {
@@ -63,5 +70,21 @@ public class UserService {
 
         return userDto;
     }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public User getUserByUsername(String username){
+        return userRepository.getUserByUsername(username);
+    }
+    public User getUserByEmail(String email){
+        return userRepository.getUserByEmail(email);
+    }
+
+    private String getUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
 }
 

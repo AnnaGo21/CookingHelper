@@ -17,11 +17,11 @@ import java.util.Date;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${bezkoder.app.jwtSecret}")
-    private String jwtSecret;
+        @Value("${bezkoder.app.jwtSecret}")
+    private String jwtSecret = "L=====================BezKoder=Spring===========================";
 
-    @Value("${bezkoder.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+        @Value("${bezkoder.app.jwtExpirationMs}")
+    private int jwtExpirationMs = 86400000;
 
     public String generateJwtToken(Authentication authentication) {
 
@@ -36,7 +36,6 @@ public class JwtUtils {
     }
 
     private Key key() {
-
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
@@ -47,16 +46,17 @@ public class JwtUtils {
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
-            return true;
+            Jws<Claims> claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (MalformedJwtException e) {
-            logger.error("Invalid JWT token: {}", e.getMessage());
+            System.out.println("Invalid JWT token: " + e.getMessage());
         } catch (ExpiredJwtException e) {
-            logger.error("JWT token is expired: {}", e.getMessage());
+            System.out.println("JWT token is expired: " + e.getMessage());
         } catch (UnsupportedJwtException e) {
-            logger.error("JWT token is unsupported: {}", e.getMessage());
+            System.out.println("JWT token is unsupported: " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            logger.error("JWT claims string is empty: {}", e.getMessage());
+            System.out.println("JWT claims string is empty: " + e.getMessage());
         }
 
         return false;

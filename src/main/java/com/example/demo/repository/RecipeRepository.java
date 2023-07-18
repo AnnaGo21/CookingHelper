@@ -5,7 +5,6 @@ import com.example.demo.entity.Food;
 import com.example.demo.entity.Recipe;
 import com.example.demo.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +14,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
     Recipe findByRecipeId(int recipeId);
     Recipe findByRecipeNameContainingIgnoreCase(String recipeName); // Because each recipe has th unique name
+
     Food findByFoodId(int foodId);
     List<Recipe> findByCreatedBy(User user);
     List<Recipe> findByCreatedById(int userId);

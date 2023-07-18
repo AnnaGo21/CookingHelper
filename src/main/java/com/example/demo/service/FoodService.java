@@ -64,14 +64,6 @@ public class FoodService {
         return existingFood;
     }
 
-    public void restoreDeletedFoods(List<FoodDto> deletedFoods){
-        this.restoredFoods = new ArrayList<>();
-        for (FoodDto food : deletedFoods){
-            FoodDto restoredFood = createFood(food);
-            restoredFoods.add(restoredFood);
-        }
-    }
-
     public void deleteFood(int foodId) {
         //Want to save food to restore then, just if we delete it by mistake
         Food foodToDelete = recipeRepository.findByFoodId(foodId);
@@ -137,15 +129,6 @@ public class FoodService {
 
 
     public List<FoodDto> getFoodByIngredientId(int ingredientId) {
-//        Ingredient ingredient = ingredientRepository.findById(ingredientId).get();
-//        if (ingredient == null) {
-//            return Collections.emptyList();
-//        }
-//        return ingredient.getIngredientsRecipesList()
-//                .stream()
-//                .map(ingredientsRecipes ->
-//                        foodToFoodDto(foodRepository.getByFoodId(ingredientsRecipes.getRecipe().getFoodId())))
-//                .collect(Collectors.toList());
         Optional ingredient = ingredientRepository.findById(ingredientId);
         if(ingredient.isPresent()){
             Ingredient ingredient1 = ingredientRepository.findById(ingredientId).get();

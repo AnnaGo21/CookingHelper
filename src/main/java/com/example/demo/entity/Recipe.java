@@ -20,10 +20,8 @@ public class Recipe {
     @Column(name = "recipe_id")
     private int recipeId;
 
-
     @Column(name = "food_id")
     private int foodId;
-
 
     @Column(name = "recipe_name")
     private String recipeName;
@@ -42,7 +40,6 @@ public class Recipe {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-
     private User createdBy;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
@@ -64,13 +61,6 @@ public class Recipe {
     @CollectionTable(name = "RECIPE_STEPS", joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "step")
     private List<String> steps;
-
-    /*
-    * JPA treats it as a separate table in the database.
-    * The steps table will have a foreign key to the Recipe table to establish the relationship.
-    * Each element in the steps collection will be stored as a separate row in the steps table,
-    with a reference to the corresponding Recipe entity.
-     */
 
 }
 

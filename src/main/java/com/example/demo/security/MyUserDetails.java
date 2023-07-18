@@ -13,11 +13,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Data
 public class MyUserDetails implements UserDetails {
-
-    private User user;
 
     private int userId;
 
@@ -28,37 +25,25 @@ public class MyUserDetails implements UserDetails {
     @JsonIgnore
     private String password;
 
-    public MyUserDetails(User user) {
-        this.user = user;
-    }
+    private Collection<? extends GrantedAuthority> authorities;
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return this.username;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return this.password;
     }
 
     public int getUserId(){
-        return user.getId();
+        return this.userId;
     }
 
     public String getUserEmail(){
-        return user.getEmail();
+        return this.email;
     }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                .collect(Collectors.toList());
-    }
-
-    /////////////////
-    private Collection<? extends GrantedAuthority> authorities;
 
     public MyUserDetails(int userId, String username, String email, String password,
                            Collection<? extends GrantedAuthority> authorities) {
@@ -82,10 +67,6 @@ public class MyUserDetails implements UserDetails {
                 authorities);
     }
 
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return authorities;
-//    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -96,8 +77,6 @@ public class MyUserDetails implements UserDetails {
         return Objects.equals(userId, user.getUserId());
     }
 
-
-    /////////////////////
 
     @Override
     public boolean isAccountNonExpired() {

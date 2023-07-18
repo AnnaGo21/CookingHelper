@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/food")
+@RequestMapping("/api/food")
 public class FoodController {
     private final FoodService foodService;
 
@@ -25,7 +25,7 @@ public class FoodController {
         return foodService.getAllFoods();
     }
 
-    @GetMapping("delete/{foodId}")
+    @DeleteMapping("delete/{foodId}")
     public void deleteFoodById(@PathVariable int foodId){
         foodService.deleteFood(foodId);
     }

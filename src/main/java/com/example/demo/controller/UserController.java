@@ -3,11 +3,12 @@ package com.example.demo.controller;
 import com.example.demo.config.JwtUtils;
 import com.example.demo.dto.UserDto;
 import com.example.demo.dto.UserRegistrationDto;
-import com.example.demo.entity.User;
 import com.example.demo.security.MyUserDetails;
 import com.example.demo.request.LoginRequest;
 import com.example.demo.response.JwtResponse;
 import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Validated
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -43,29 +44,27 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable int id) {
+    public UserDto getUserById(@PathVariable int id) {
         return userService.getUserById(id);
     }
 
-    @PutMapping
-    public User postDetails(@RequestBody User user) {
-        return userService.saveDetails(user);
-    }
-
-    @PostMapping
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation
+    @SecurityRequirements
     public UserDto registerUser(@RequestBody @Valid UserRegistrationDto userRegistrationDto) {
         return userService.createUser(userRegistrationDto);
     }
 
-    @PostMapping("/signin")
+    @PostMapping("/sign-in")
+    @Operation
+    @SecurityRequirements
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-
 
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
