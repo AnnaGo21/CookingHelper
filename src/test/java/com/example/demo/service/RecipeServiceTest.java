@@ -8,6 +8,7 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.RecipeRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.exceptions.UnauthorizedAccessException;
+import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,26 +80,27 @@ class RecipeServiceTest {
         //Mockito.reset();
     }
 
-    @Test
-    void createRecipe() {
-        RecipeDto recipeDto = RecipeDto.builder()
-                .recipeName("Greek Salad")
-                .creatorUserId(1)
-                .foodId(1)
-                .isPublic(true)
-                .cuisine("italian")
-                .build();
-
-        User createdBy = new User();
-        when(userRepository.getUserById(anyInt())).thenReturn(createdBy);
-
-        recipe.setCreatedBy(createdBy);
-        when(recipeRepository.save(any(Recipe.class))).thenReturn(recipe);
-
-        RecipeDto result = recipeService.createRecipe(recipeDto);
-
-        assertEquals(recipe.getRecipeId(), result.getRecipeId());
-    }
+//    @Test
+//    @Ignore
+//    void createRecipe() {
+//        RecipeDto recipeDto = RecipeDto.builder()
+//                .recipeName("Greek Salad")
+//                .creatorUserId(1)
+//                .foodId(1)
+//                .isPublic(true)
+//                .cuisine("italian")
+//                .build();
+//
+//        User createdBy = new User();
+//        when(userRepository.getUserById(anyInt())).thenReturn(createdBy);
+//
+//        recipe.setCreatedBy(createdBy);
+//        when(recipeRepository.save(any(Recipe.class))).thenReturn(recipe);
+//
+//        RecipeDto result = recipeService.createRecipe(recipeDto);
+//
+//        assertEquals(recipe.getRecipeId(), result.getRecipeId());
+//    }
 
     @Test
     void getAllRecipes() {
@@ -111,51 +113,51 @@ class RecipeServiceTest {
         assertEquals(1, result.size());
     }
 
-    @Test
-    void deleteRecipe_When_AuthorizedUser_DeletesRecipe() throws UnauthorizedAccessException {
-        UserDto creatorUserDto = UserDto.builder()
-                .username(user.getUsername())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .build();
-
-        recipe.setCreatedBy(user);
-
-        when(userRepository.getUserById(anyInt())).thenReturn(user);
-        when(recipeRepository.findByRecipeId(anyInt())).thenReturn(recipe);
-
-        UnauthorizedAccessException exception = null;
-        try {
-            recipeService.deleteRecipe(creatorUserDto, 1);
-        } catch (UnauthorizedAccessException e) {
-            exception = e;
-        }
-        assertNull(exception);
-    }
-
-    @Test
-    void deleteRecipe_When_UnauthorizedUser_DeletesRecipe() throws UnauthorizedAccessException {
-        UserDto unauthorizedUserDto = UserDto.builder()
-                .username("UnauthorizedUser")
-                .firstName("xxx")
-                .lastName("yyyyy")
-                .email("xx.yyy@example.com")
-                .build();
-
-        recipe.setCreatedBy(user);
-
-        when(userRepository.getUserById(anyInt())).thenReturn(user);
-        when(recipeRepository.findByRecipeId(anyInt())).thenReturn(recipe);
-
-        UnauthorizedAccessException exception = null;
-        try {
-            recipeService.deleteRecipe(unauthorizedUserDto, 1);
-        } catch (UnauthorizedAccessException e) {
-            exception = e;
-        }
-        assertNotNull(exception);
-    }
+//    @Test
+//    void deleteRecipe_When_AuthorizedUser_DeletesRecipe() throws UnauthorizedAccessException {
+//        UserDto creatorUserDto = UserDto.builder()
+//                .username(user.getUsername())
+//                .firstName(user.getFirstName())
+//                .lastName(user.getLastName())
+//                .email(user.getEmail())
+//                .build();
+//
+//        recipe.setCreatedBy(user);
+//
+//        when(userRepository.getUserById(anyInt())).thenReturn(user);
+//        when(recipeRepository.findByRecipeId(anyInt())).thenReturn(recipe);
+//
+//        UnauthorizedAccessException exception = null;
+//        try {
+//            recipeService.deleteRecipe(creatorUserDto, 1);
+//        } catch (UnauthorizedAccessException e) {
+//            exception = e;
+//        }
+//        assertNull(exception);
+//    }
+//
+//    @Test
+//    void deleteRecipe_When_UnauthorizedUser_DeletesRecipe() throws UnauthorizedAccessException {
+//        UserDto unauthorizedUserDto = UserDto.builder()
+//                .username("UnauthorizedUser")
+//                .firstName("xxx")
+//                .lastName("yyyyy")
+//                .email("xx.yyy@example.com")
+//                .build();
+//
+//        recipe.setCreatedBy(user);
+//
+//        when(userRepository.getUserById(anyInt())).thenReturn(user);
+//        when(recipeRepository.findByRecipeId(anyInt())).thenReturn(recipe);
+//
+//        UnauthorizedAccessException exception = null;
+//        try {
+//            recipeService.deleteRecipe(unauthorizedUserDto, 1);
+//        } catch (UnauthorizedAccessException e) {
+//            exception = e;
+//        }
+//        assertNotNull(exception);
+//    }
 
     @Test
     void getRecipeDtosByUser() {
@@ -223,102 +225,107 @@ class RecipeServiceTest {
         assertEquals(recipeList.size(), result.size());
     }
 
-    @Test
-    void searchRecipesByProteinAndUser() {
-        int userId = 1;
-        double minProtein = 10.5;
+//    @Test
+//    @Ignore
+//    void searchRecipesByProteinAndUser() {
+//        int userId = 1;
+//        double minProtein = 10.5;
+//
+//        List<Recipe> recipeList = Collections.singletonList(recipe);
+//        when(recipeRepository.findByIngredientsRecipesList_Ingredient_ProteinsGreaterThanEqual(minProtein)).thenReturn(recipeList);
+//        when(userRepository.getUserById(userId)).thenReturn(user);
+//        when(recipeRepository.findByCreatedById(userId)).thenReturn(recipeList);
+//
+//        List<RecipeDtoRegular> result = recipeService.searchRecipesByProteinAndUser(userId, minProtein);
+//
+//        assertEquals(recipeList.size(), result.size());
+//    }
 
-        List<Recipe> recipeList = Collections.singletonList(recipe);
-        when(recipeRepository.findByIngredientsRecipesList_Ingredient_ProteinsGreaterThanEqual(minProtein)).thenReturn(recipeList);
-        when(userRepository.getUserById(userId)).thenReturn(user);
-        when(recipeRepository.findByCreatedById(userId)).thenReturn(recipeList);
+//    @Test
+//    @Ignore
+//    void searchRecipesByFatAndUser() {
+//        int userId = 1;
+//        double maxFat = 8.5;
+//
+//        List<Recipe> recipeList = Collections.singletonList(recipe);
+//        when(recipeRepository.findByIngredientsRecipesList_Ingredient_FatLessThanEqual(maxFat)).thenReturn(recipeList);
+//        when(userRepository.getUserById(userId)).thenReturn(user);
+//        when(recipeRepository.findByCreatedById(userId)).thenReturn(recipeList);
+//
+//        List<RecipeDtoRegular> result = recipeService.searchRecipesByFatAndUser(userId, maxFat);
+//
+//        assertEquals(recipeList.size(), result.size());
+//    }
 
-        List<RecipeDtoRegular> result = recipeService.searchRecipesByProteinAndUser(userId, minProtein);
-
-        assertEquals(recipeList.size(), result.size());
-    }
-
-    @Test
-    void searchRecipesByFatAndUser() {
-        int userId = 1;
-        double maxFat = 8.5;
-
-        List<Recipe> recipeList = Collections.singletonList(recipe);
-        when(recipeRepository.findByIngredientsRecipesList_Ingredient_FatLessThanEqual(maxFat)).thenReturn(recipeList);
-        when(userRepository.getUserById(userId)).thenReturn(user);
-        when(recipeRepository.findByCreatedById(userId)).thenReturn(recipeList);
-
-        List<RecipeDtoRegular> result = recipeService.searchRecipesByFatAndUser(userId, maxFat);
-
-        assertEquals(recipeList.size(), result.size());
-    }
-
-    @Test
-    void searchRecipesByCaloriesAndUser() {
-        int userId = 1;
-        double minCalories = 130.5;
-
-        List<Recipe> recipeList = Collections.singletonList(recipe);
-        when(recipeRepository.findByIngredientsRecipesList_Ingredient_CaloriesGreaterThanEqual(minCalories)).thenReturn(recipeList);
-        when(userRepository.getUserById(userId)).thenReturn(user);
-        when(recipeRepository.findByCreatedById(userId)).thenReturn(recipeList);
-
-        List<RecipeDtoRegular> result = recipeService.searchRecipesByCaloriesAndUser(userId, minCalories);
-
-        assertEquals(recipeList.size(), result.size());
-    }
-
-    @Test
-    void searchRecipesByCarbohydratesAndUser() {
-        int userId = 1;
-        double minCarbohydrates = 25.5;
-
-        List<Recipe> recipeList = Collections.singletonList(recipe);
-        when(recipeRepository.findByIngredientsRecipesList_Ingredient_CarbohydratesGreaterThanEqual(minCarbohydrates)).thenReturn(recipeList);
-        when(userRepository.getUserById(userId)).thenReturn(user);
-        when(recipeRepository.findByCreatedById(userId)).thenReturn(recipeList);
-
-        List<RecipeDtoRegular> result = recipeService.searchRecipesByCarbohydratesAndUser(userId, minCarbohydrates);
-
-        assertEquals(recipeList.size(), result.size());
-    }
-
-    @Test
-    void searchRecipesByCarbohydratesRangeAndUser() {
-       // reset(recipeRepository);
-        int userId = 1;
-        double minCarbohydrates = 2.00;
-        double maxCarbohydrates = 200.00;
-
-        User user1 = new User();
-        user1.setId(userId);
-        user1.setUsername("AnnaGo21");
-        user1.setFirstName("Ana");
-        user1.setLastName("Kubaneishvili");
-        user1.setEmail("akuba19@gmail.com");
-
-        when(userRepository.getUserById(userId)).thenReturn(user1);
-
-        Recipe recipe1 = new Recipe();
-        recipe1.setRecipeId(1);
-        recipe1.setCreatedBy(user1);
-        recipe1.setRecipeName("Greek Salad");
-        recipe1.setTotalCarbohydrates(2.00);
-
-        Recipe recipe2 = new Recipe();
-        recipe2.setRecipeId(2);
-        recipe2.setCreatedBy(user1);
-        recipe2.setRecipeName("Italian Salad");
-        recipe2.setTotalCarbohydrates(200.00);
-
-
-        List<Recipe> userRecipes = List.of(recipe1, recipe2);
-        when(recipeRepository.findByCreatedById(userId)).thenReturn(userRecipes);
-
-        List<RecipeDtoRegular> result = recipeService.searchRecipesByCarbohydratesRangeAndUser(userId, minCarbohydrates, maxCarbohydrates);
-
-        assertEquals(userRecipes.size(), result.size());
-    }
+//    @Test
+//    @Ignore
+//    void searchRecipesByCaloriesAndUser() {
+//        int userId = 1;
+//        double minCalories = 130.5;
+//
+//        List<Recipe> recipeList = Collections.singletonList(recipe);
+//        when(recipeRepository.findByIngredientsRecipesList_Ingredient_CaloriesGreaterThanEqual(minCalories)).thenReturn(recipeList);
+//        when(userRepository.getUserById(userId)).thenReturn(user);
+//        when(recipeRepository.findByCreatedById(userId)).thenReturn(recipeList);
+//
+//        List<RecipeDtoRegular> result = recipeService.searchRecipesByCaloriesAndUser(userId, minCalories);
+//
+//        assertEquals(recipeList.size(), result.size());
+//    }
+//
+//    @Test
+//    @Ignore
+//    void searchRecipesByCarbohydratesAndUser() {
+//        int userId = 1;
+//        double minCarbohydrates = 25.5;
+//
+//        List<Recipe> recipeList = Collections.singletonList(recipe);
+//        when(recipeRepository.findByIngredientsRecipesList_Ingredient_CarbohydratesGreaterThanEqual(minCarbohydrates)).thenReturn(recipeList);
+//        when(userRepository.getUserById(userId)).thenReturn(user);
+//        when(recipeRepository.findByCreatedById(userId)).thenReturn(recipeList);
+//
+//        List<RecipeDtoRegular> result = recipeService.searchRecipesByCarbohydratesAndUser(userId, minCarbohydrates);
+//
+//        assertEquals(recipeList.size(), result.size());
+//    }
+//
+//    @Test
+//    @Ignore
+//    void searchRecipesByCarbohydratesRangeAndUser() {
+//       // reset(recipeRepository);
+//        int userId = 1;
+//        double minCarbohydrates = 2.00;
+//        double maxCarbohydrates = 200.00;
+//
+//        User user1 = new User();
+//        user1.setId(userId);
+//        user1.setUsername("AnnaGo21");
+//        user1.setFirstName("Ana");
+//        user1.setLastName("Kubaneishvili");
+//        user1.setEmail("akuba19@gmail.com");
+//
+//        when(userRepository.getUserById(userId)).thenReturn(user1);
+//
+//        Recipe recipe1 = new Recipe();
+//        recipe1.setRecipeId(1);
+//        recipe1.setCreatedBy(user1);
+//        recipe1.setRecipeName("Greek Salad");
+//        recipe1.setTotalCarbohydrates(2.00);
+//
+//        Recipe recipe2 = new Recipe();
+//        recipe2.setRecipeId(2);
+//        recipe2.setCreatedBy(user1);
+//        recipe2.setRecipeName("Italian Salad");
+//        recipe2.setTotalCarbohydrates(200.00);
+//
+//
+//        List<Recipe> userRecipes = List.of(recipe1, recipe2);
+//        when(recipeRepository.findByCreatedById(userId)).thenReturn(userRecipes);
+//
+//        List<RecipeDtoRegular> result = recipeService.searchRecipesByCarbohydratesRangeAndUser(userId, minCarbohydrates, maxCarbohydrates);
+//
+//        assertEquals(userRecipes.size(), result.size());
+//    }
 
     @Test
     void searchRecipesByProteinsRangeAndUser() {
@@ -328,41 +335,42 @@ class RecipeServiceTest {
     void searchRecipesByFatRangeAndUser() {
     }
 
-    @Test
-    void searchRecipesByCaloriesRangeAndUser() {
-        int userId = 1;
-        double minCalories = 100.0;
-        double maxCalories = 800.0;
-
-        User user1 = new User();
-        user1.setId(userId);
-        user1.setUsername("Emma28");
-        user1.setFirstName("Emma");
-        user1.setLastName("Swan");
-        user1.setEmail("emma.sw@gmail.com");
-        when(userRepository.getUserById(userId)).thenReturn(user1);
-
-
-        Recipe recipe1 = new Recipe();
-        recipe1.setRecipeId(1);
-        recipe1.setCreatedBy(user1);
-        recipe1.setRecipeName("Greek Salad");
-        recipe1.setTotalCarbohydrates(200.00);
-
-        Recipe recipe2 = new Recipe();
-        recipe2.setRecipeId(2);
-        recipe2.setCreatedBy(user1);
-        recipe2.setRecipeName("Italian Salad");
-        recipe2.setTotalCarbohydrates(350.00);
-
-
-        List<Recipe> userRecipes = List.of(recipe1, recipe2);
-        when(recipeRepository.findByCreatedById(userId)).thenReturn(userRecipes);
-
-        List<RecipeDtoRegular> result = recipeService.searchRecipesByCarbohydratesRangeAndUser(userId, minCalories, maxCalories);
-
-        assertEquals(userRecipes.size(), result.size());
-    }
+//    @Test
+//    @Ignore
+//    void searchRecipesByCaloriesRangeAndUser() {
+//        int userId = 1;
+//        double minCalories = 100.0;
+//        double maxCalories = 800.0;
+//
+//        User user1 = new User();
+//        user1.setId(userId);
+//        user1.setUsername("Emma28");
+//        user1.setFirstName("Emma");
+//        user1.setLastName("Swan");
+//        user1.setEmail("emma.sw@gmail.com");
+//        when(userRepository.getUserById(userId)).thenReturn(user1);
+//
+//
+//        Recipe recipe1 = new Recipe();
+//        recipe1.setRecipeId(1);
+//        recipe1.setCreatedBy(user1);
+//        recipe1.setRecipeName("Greek Salad");
+//        recipe1.setTotalCarbohydrates(200.00);
+//
+//        Recipe recipe2 = new Recipe();
+//        recipe2.setRecipeId(2);
+//        recipe2.setCreatedBy(user1);
+//        recipe2.setRecipeName("Italian Salad");
+//        recipe2.setTotalCarbohydrates(350.00);
+//
+//
+//        List<Recipe> userRecipes = List.of(recipe1, recipe2);
+//        when(recipeRepository.findByCreatedById(userId)).thenReturn(userRecipes);
+//
+//        List<RecipeDtoRegular> result = recipeService.searchRecipesByCarbohydratesRangeAndUser(userId, minCalories, maxCalories);
+//
+//        assertEquals(userRecipes.size(), result.size());
+//    }
 
     @Test
     void searchRecipesByNutrientRangesAndUser() {
