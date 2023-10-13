@@ -1,9 +1,7 @@
 CREATE TABLE REGISTERED_USERS (
-    id bigint(20) NOT NULL AUTO_INCREMENT,
-    username varchar(100) NOT NULL,
-    first_name varchar(50) NOT NULL,
-    last_name varchar(50) DEFAULT NULL,
-    email varchar(50) NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY UK_username (username)
-)  ENGINE=InnoDB DEFAULT CHARSET=utf8;
+      id INT PRIMARY KEY AUTO_INCREMENT,
+      username VARCHAR(255),
+      first_name VARCHAR(255),
+      last_name VARCHAR(255),
+      email VARCHAR(255)
+);
